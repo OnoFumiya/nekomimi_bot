@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<robot name="nekomimi_bot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Add Common Xacro: transmissions, colors -->
+  <xacro:include filename="$(find nekomimi_bot_description)/urdf/materials.urdf.xacro" />
+  <xacro:include filename="$(find nekomimi_bot_description)/urdf/controllers.urdf.xacro" />
+  <xacro:include filename="$(find nekomimi_bot_description)/urdf/values.xacro" />
+  
+  <!-- Add URDF: links, joints -->
+  <xacro:include filename="$(find nekomimi_bot_description)/urdf/mobile_base/base.urdf.xacro" />
+  <xacro:include filename="$(find nekomimi_bot_description)/urdf/body/body.urdf.xacro" />
+  <xacro:include filename="$(find nekomimi_bot_description)/urdf/mobile_base/wheel_base.urdf.xacro" />
+  <xacro:include filename="$(find nekomimi_bot_description)/urdf/mobile_base/wheel.urdf.xacro" />
+  <xacro:include filename="$(find nekomimi_bot_description)/urdf/head/head.urdf.xacro" />
+  <xacro:include filename="$(find nekomimi_bot_description)/urdf/sensor/lidar.urdf.xacro" />
+  <xacro:include filename="$(find nekomimi_bot_description)/urdf/sensor/camera.urdf.xacro" />
+
+  <!-- Add variables -->
+  <xacro:arg name="enable_gz"                 default="False" />
+  <xacro:arg name="robot_name"                default="nekomimi_bot" />
+
+
+  <!-- Conection -->
+  <xacro:base/>
+  <xacro:body_plate prefix="body_plate" parent="base_footprint" />
+  <xacro:body_roll  prefix="body_roll"  parent="body_plate" />
+  <xacro:wheel      prefix="wheel"      parent="body_roll" />
+  <xacro:head       prefix="head"       parent="body_plate" />
+  <xacro:lidar                          parent="body_plate" />
+  <xacro:camera                         parent="head_tilt" />
+
+
+
+  <!-- Add Feetech plugins -->
+  <xacro:controllers name="joints_control" enable_gz="$(arg enable_gz)" robot_name="$(arg robot_name)" />
+
+</robot>
