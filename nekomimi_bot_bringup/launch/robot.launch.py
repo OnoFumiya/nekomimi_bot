@@ -225,6 +225,4 @@ def launch_gz(context, *args, **kwargs):
             #     )
             # ),
             robot_state_publisher_node,
-            # library_server_launch,
-            # rviz_node,
         ]
