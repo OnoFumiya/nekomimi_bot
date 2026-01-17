@@ -1,0 +1,13 @@
+# MoveWheelRotate.action
+# Goal
+float32 target_yaw                              # Angle to be rotated
+builtin_interfaces/Duration time_allowance      # Limmit time
+---
+# Result
+bool success                                    # SUCCESS/FAILED
+string message                                  # Result message
+builtin_interfaces/Duration total_elapsed_time  # the time required
+---
+# Feedback
+float32 current_yaw                             # Angle rotated to date
+builtin_interfaces/Duration move_time           # Time taken to date

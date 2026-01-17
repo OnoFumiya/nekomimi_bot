@@ -1,0 +1,11 @@
+# MoveHandToTargetCoord.srv
+# Request
+geometry_msgs/TransformStamped target_coord     # Target coordinates
+
+---
+# Result
+geometry_msgs/Pose move_pose                    # Moving pose for grasping
+string[] target_joint_names                     # List of joint names to move
+float64[] target_joint_rad                      # List of joint angles to move
+bool success                                    # Enable grasp
+string message                                  # Result message

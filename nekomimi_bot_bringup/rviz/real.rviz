@@ -5,6 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
+        - /TF1
       Splitter Ratio: 0.5222482681274414
     Tree Height: 491
   - Class: rviz_common/Selection
@@ -139,34 +140,53 @@ Visualization Manager:
           Value: true
         nekomimi_bot/body_plate_link:
           Value: true
+        nekomimi_bot/body_roll_link:
+          Value: true
         nekomimi_bot/head_link:
+          Value: true
+        nekomimi_bot/head_pan_link:
           Value: true
         nekomimi_bot/head_tilt_link:
           Value: true
+        nekomimi_bot/left_wheel_link:
+          Value: true
         nekomimi_bot/lidar_link:
+          Value: true
+        nekomimi_bot/odom:
           Value: true
         nekomimi_bot/realsense_link:
           Value: true
-      Marker Scale: 0.5
+        nekomimi_bot/right_wheel_link:
+          Value: true
+      Marker Scale: 0.25
       Name: TF
       Show Arrows: true
       Show Axes: true
-      Show Names: true
+      Show Names: false
       Tree:
-        nekomimi_bot/base_footprint:
-          nekomimi_bot/body_plate_cover_link:
-            {}
-          nekomimi_bot/body_plate_link:
-            nekomimi_bot/head_link:
+        nekomimi_bot/odom:
+          nekomimi_bot/base_footprint:
+            nekomimi_bot/body_plate_cover_link:
               {}
-            nekomimi_bot/lidar_link:
-              {}
+            nekomimi_bot/body_plate_link:
+              nekomimi_bot/body_roll_link:
+                nekomimi_bot/left_wheel_link:
+                  {}
+                nekomimi_bot/right_wheel_link:
+                  {}
+              nekomimi_bot/head_link:
+                nekomimi_bot/head_pan_link:
+                  nekomimi_bot/head_tilt_link:
+                    nekomimi_bot/realsense_link:
+                      {}
+              nekomimi_bot/lidar_link:
+                {}
       Update Interval: 0
       Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: nekomimi_bot/base_footprint
+    Fixed Frame: nekomimi_bot/odom
     Frame Rate: 30
   Name: root
   Tools:

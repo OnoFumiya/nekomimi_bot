@@ -47,9 +47,9 @@ NekomimiBotWheelMain::NekomimiBotWheelMain(const rclcpp::NodeOptions & options =
   wheels_prev_pos.clear();
   wheels_curt_pos.clear();
   while (joints_pos.empty()) rclcpp::spin_some(this->get_node_base_interface());
-  wheels_prev_pos["body_roll_joint"] = wheels_curt_pos["body_roll_joint"] = joints_pos["body_roll_joint"];
-  wheels_prev_pos["left_wheel"]      = wheels_curt_pos["left_wheel"]      = joints_pos["left_wheel"];
-  wheels_prev_pos["right_wheel"]     = wheels_curt_pos["right_wheel"]     = joints_pos["right_wheel"];
+  wheels_prev_pos["body_roll_joint"]   = wheels_curt_pos["body_roll_joint"]   = joints_pos["body_roll_joint"];
+  wheels_prev_pos["left_wheel_joint"]  = wheels_curt_pos["left_wheel_joint"]  = joints_pos["left_wheel_joint"];
+  wheels_prev_pos["right_wheel_joint"] = wheels_curt_pos["right_wheel_joint"] = joints_pos["right_wheel_joint"];
   prev_wheels_vel[0] = set_wheels_vel[0] = joints_pos["body_roll_joint"];
   prev_wheels_vel[1] = set_wheels_vel[1] = 0.;
   prev_wheels_vel[2] = set_wheels_vel[2] = 0.;

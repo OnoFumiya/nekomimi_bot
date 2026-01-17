@@ -1,0 +1,11 @@
+# MoveHandToTargetTF.srv
+# Request
+string target_frame                             # Frame name to be grasped
+geometry_msgs/TransformStamped tf_differential  # Differential coordinates of Target frame
+---
+# Result
+geometry_msgs/Pose move_pose                    # Moving pose for grasping
+string[] target_joint_names                     # List of joint names to move
+float64[] target_joint_rad                      # List of joint angles to move
+bool success                                    # Enable grasp
+string message                                  # Result message

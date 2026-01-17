@@ -20,7 +20,8 @@
       <collision>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
-          <box size="0.1 0.1 0.1" />
+          <!-- <box size="0.1 0.1 0.1" /> -->
+          <mesh filename="file://$(find nekomimi_bot_description)/meshes/head/head_base.stl" scale="0.001 0.001 0.001" />
         </geometry>
       </collision>
       <inertial>
@@ -55,7 +56,8 @@
       <collision>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
-          <box size="0.1 0.1 0.1" />
+          <!-- <box size="0.1 0.1 0.1" /> -->
+          <mesh filename="file://$(find nekomimi_bot_description)/meshes/head/head_tilt_base.stl" scale="0.001 0.001 0.001" />
         </geometry>
       </collision>
       <inertial>
@@ -90,7 +92,8 @@
       <collision>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
-          <box size="0.1 0.1 0.1" />
+          <!-- <box size="0.1 0.1 0.1" /> -->
+          <mesh filename="file://$(find nekomimi_bot_description)/meshes/head/camera_base.stl" scale="0.001 0.001 0.001" />
         </geometry>
       </collision>
       <inertial>

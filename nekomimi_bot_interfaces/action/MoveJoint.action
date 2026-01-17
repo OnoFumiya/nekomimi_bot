@@ -1,0 +1,16 @@
+# MoveJoint.action
+# Goal
+string[] target_joint_names                     # List of joint names to move
+float64[] target_joint_rad                      # List of joint angles to move
+builtin_interfaces/Duration time_allowance      # Limmit time
+---
+# Result
+bool success                                    # SUCCESS/FAILED
+string message                                  # Result message
+builtin_interfaces/Duration total_elapsed_time  # the time required
+---
+# Feedback
+string[] current_joint_names                    # Current list of active joint names
+float32[] current_joint_rad                     # Current list of active joint angles
+# float32[] current_joint_vel                     # Current list of active joint angle vellocity
+builtin_interfaces/Duration move_time           # Time taken to date

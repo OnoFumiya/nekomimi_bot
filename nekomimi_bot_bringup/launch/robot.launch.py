@@ -127,16 +127,16 @@ def launch_gz(context, *args, **kwargs):
     #     }.items(),
     # )
 
-    # move_base_node = Node(
-    #     package="nekomimi_bot_bringup",
-    #     executable="nekomimi_bot_wheel",
-    #     name="nekomimi_bot_wheel",
-    #     namespace=robot_name,
-    #     parameters=[
-    #         {"use_sim_time": True if enable_gz == 'True' else False},
-    #     ],
-    #     output="screen",
-    # )
+    move_base_node = Node(
+        package="nekomimi_bot_bringup",
+        executable="nekomimi_bot_wheel_node",
+        name="nekomimi_bot_wheel_node",
+        namespace=robot_name,
+        parameters=[
+            {"use_sim_time": True if enable_gz == 'True' else False},
+        ],
+        output="screen",
+    )
 
     if enable_gz == 'True':
         gz_spawn_entity_node = Node(
@@ -176,12 +176,12 @@ def launch_gz(context, *args, **kwargs):
             joint_trajectory_controller,
             velocity_controller,
             robot_state_publisher_node,
-            # RegisterEventHandler(
-            #     event_handler=OnProcessExit(
-            #         target_action=joint_state_broadcaster,
-            #         on_exit=[move_base_node],
-            #     )
-            # ),
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=joint_state_broadcaster,
+                    on_exit=[move_base_node],
+                )
+            ),
             # RegisterEventHandler(
             #     event_handler=OnProcessExit(
             #         target_action=joint_state_broadcaster,
@@ -212,12 +212,12 @@ def launch_gz(context, *args, **kwargs):
                     on_exit=[velocity_controller],
                 )
             ),
-            # RegisterEventHandler(
-            #     event_handler=OnProcessExit(
-            #         target_action=joint_state_broadcaster,
-            #         on_exit=[move_base_node],
-            #     )
-            # ),
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=joint_state_broadcaster,
+                    on_exit=[move_base_node],
+                )
+            ),
             # RegisterEventHandler(
             #     event_handler=OnProcessExit(
             #         target_action=joint_state_broadcaster,

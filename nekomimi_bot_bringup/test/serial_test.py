@@ -130,11 +130,11 @@ if __name__ == '__main__':
         # 1. 初期位置 (例えば、0度 / Position 0) に移動
         # (Position 0, Speed 500)
         print("Moving to initial position (0 degrees / Position 0)...")
-        move_servo(ser, 21, 2048, 1024)
+        move_servo(ser, 21, 2048, 0)
         time.sleep(1)
-        move_servo(ser, 11, 0, 1500)
-        move_servo(ser, 12, 0, 1500)
-        time.sleep(5) # 動作完了を待つ
+        # move_servo(ser, 11, 0, 1500)
+        # move_servo(ser, 12, 0, 1500)
+        # time.sleep(5) # 動作完了を待つ
 
         # # 2. 中間位置 (例えば、180度 / Position 2048) に移動
         # # (Position 2048, Speed 1000)
@@ -144,11 +144,11 @@ if __name__ == '__main__':
 
         # 3. 終了位置 (例えば、360度 / Position 4095) に移動
         # (Position 4095, Speed 500)
-        print("Moving to 360 degrees (Position 4095)...")
-        # move_servo(ser, SERVO_ID, 1024, 512)
-        move_servo(ser, 11, 0, 0)
-        move_servo(ser, 12, 0, 0)
-        time.sleep(10)
+        # print("Moving to 360 degrees (Position 4095)...")
+        # # move_servo(ser, SERVO_ID, 1024, 512)
+        # move_servo(ser, 11, 0, 0)
+        # move_servo(ser, 12, 0, 0)
+        # time.sleep(10)
 
         print("Position control sequence finished.")
 

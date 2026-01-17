@@ -21,6 +21,7 @@
           <param name="id">21</param>
           <param name="p_cofficient">8</param>
           <param name="offset">2048</param>
+          <param name="counter_rotation">1</param>
         </xacro:unless>
         <command_interface name="position"/>
         <state_interface name="position"/>
@@ -36,6 +37,7 @@
           <param name="id">31</param>
           <param name="p_cofficient">8</param>
           <param name="offset">2048</param>
+          <param name="counter_rotation">1</param>
         </xacro:unless>
         <command_interface name="position"/>
         <state_interface name="position"/>
@@ -47,6 +49,7 @@
           <param name="id">32</param>
           <param name="p_cofficient">8</param>
           <param name="offset">2048</param>
+          <param name="counter_rotation">1</param>
         </xacro:unless>
         <command_interface name="position"/>
         <state_interface name="position"/>
@@ -60,6 +63,7 @@
           <param name="id">11</param>
           <!-- <param name="p_cofficient">8</param> -->
           <!-- <param name="offset">2048</param> -->
+          <param name="counter_rotation">1</param>
         </xacro:unless>
         <command_interface name="velocity"/>
         <state_interface name="position"/>
@@ -71,6 +75,7 @@
           <param name="id">12</param>
           <!-- <param name="p_cofficient">8</param> -->
           <!-- <param name="offset">2048</param> -->
+          <param name="counter_rotation">1</param>
         </xacro:unless>
         <command_interface name="velocity"/>
         <state_interface name="position"/>

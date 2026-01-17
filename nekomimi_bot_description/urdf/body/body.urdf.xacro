@@ -18,9 +18,10 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2}" />
         <geometry>
-          <box size="0.1 0.1 0.1" />
+          <!-- <box size="0.1 0.1 0.1" /> -->
+          <mesh filename="file://$(find nekomimi_bot_description)/meshes/body/body_plate.stl" scale="0.001 0.001 0.001" />
         </geometry>
       </collision>
       <inertial>
@@ -47,9 +48,10 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2}" />
         <geometry>
-          <box size="0.1 0.1 0.1" />
+          <!-- <box size="0.1 0.1 0.1" /> -->
+          <mesh filename="file://$(find nekomimi_bot_description)/meshes/body/body_cover.stl" scale="0.001 0.001 0.001" />
         </geometry>
       </collision>
       <inertial>
