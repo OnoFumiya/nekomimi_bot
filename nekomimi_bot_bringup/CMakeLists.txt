@@ -33,7 +33,7 @@ add_library(${PROJECT_NAME} SHARED
 )
 
 rclcpp_components_register_node(${PROJECT_NAME}
-  PLUGIN "nekomimi_bot::NekomimiBotWheelMain"
+  PLUGIN "nekomimi_bot::NekomimiBotWheelController"
   EXECUTABLE nekomimi_bot_wheel_node)
 
 ament_target_dependencies(${PROJECT_NAME}

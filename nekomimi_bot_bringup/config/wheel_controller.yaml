@@ -1,0 +1,26 @@
+/**/wheel_controller:
+  ros__parameters:
+
+    robot_base_frame: base_footprint
+
+    twist_topic: cmd_vel
+
+    position_controller_name: mobile_base_position_controller
+    velocity_controller_name: velocity_controller
+
+    body_roll_max_vel: 1.57
+    drive_max_vel: 3.14
+    wheel_radius: 0.025
+    wheel_distance: 0.15
+
+    cycle_fequency: 10
+
+    body_roll_joint: body_roll_joint
+
+    drive_joints:
+      - left_wheel_joint
+      - right_wheel_joint
+
+    body_roll_small_range: true
+
+    driving_status_threshold: 0.2

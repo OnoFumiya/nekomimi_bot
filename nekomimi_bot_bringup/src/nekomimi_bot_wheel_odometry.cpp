@@ -1,22 +1,19 @@
 #include "nekomimi_bot_bringup/nekomimi_bot_wheel_odometry.hpp"
 
 // Calculate Odometry
-nav_msgs::msg::Odometry NekomimiBotWheelOdometry::odom(
-  std::map<std::string, double> wheels_curt_pos,
-  std::map<std::string, double> wheels_prev_pos,
-  nav_msgs::msg::Odometry prev_odom)
+void NekomimiBotWheelOdometry::update_odom()
 {
-  nav_msgs::msg::Odometry result_odom;
+  nav_msgs::msg::Odometry result_odom = odom_;
 
   // get the movement of each wheel[m]
-  std::map<std::string, double> distance_m;
-  distance_m["left_wheel"]  = distance_calculation(wheels_curt_pos["left_wheel"]  - wheels_prev_pos["left_wheel"]);
-  distance_m["right_wheel"] = distance_calculation(wheels_curt_pos["right_wheel"] - wheels_prev_pos["right_wheel"]);
+  std::vector<double> distance_m(2);
+  for (int i=0; i<2; i++)
+    distance_m[i] = distance_calculation(current_drive_pos[i] - prev_drive_pos[i]);
 
-  // Transform to Roll, Pitch and Yaw from prev_odom
+  // Transform to Roll, Pitch and Yaw from  previous odom
   tf2::Quaternion quat_tf;
   double prev_roll, prev_pitch, prev_yaw;
-  tf2::fromMsg(prev_odom.pose.pose.orientation, quat_tf);
+  tf2::fromMsg(odom_.pose.pose.orientation, quat_tf);
   tf2::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
 
   double diff_x = 0.,diff_y = 0., diff_yaw = 0.;
@@ -25,37 +22,52 @@ nav_msgs::msg::Odometry NekomimiBotWheelOdometry::odom(
   diff_y
   diff_yaw
   */
+  diff_yaw -= current_body_roll_pos - prev_body_roll_pos;
+
+  double base_rad = (current_body_roll_pos + prev_body_roll_pos) / 2.;
+  if ((0 < (distance_m[0] * distance_m[1])) && (fabsf(distance_m[0] - distance_m[1]) < 0.001)) {   // Translational motion
+    diff_x = (distance_m[0] + distance_m[1]) / 2.;
+  } else {
+    diff_yaw += (distance_m[1] - distance_m[0]) / WHEEL_DISTANCE;
+    diff_x = (distance_m[0] + distance_m[1]) / 2.;
+    // geometry_msgs::msg::Point base_center;
+    // l / r = theta
+    // dm[0] / r0 = theta = dm[1] / r1
+  }
+  // diff_x = ;
 
   // Update the Odometry
-  result_odom.pose.pose.position.x = prev_odom.pose.pose.position.x + 
-      diff_x * cos(prev_yaw) - diff_y * sin(prev_yaw);
-  result_odom.pose.pose.position.y = prev_odom.pose.pose.position.y + 
-      diff_x * sin(prev_yaw) + diff_y * cos(prev_yaw);
-  result_odom.pose.pose.position.z = prev_odom.pose.pose.position.z;
+  result_odom.pose.pose.position.x = odom_.pose.pose.position.x + 
+      diff_x * cos(prev_yaw + diff_yaw) - diff_y * sin(prev_yaw + diff_yaw);
+  result_odom.pose.pose.position.y = odom_.pose.pose.position.y + 
+      diff_x * sin(prev_yaw + diff_yaw) + diff_y * cos(prev_yaw + diff_yaw);
 
   // Change quaternion
   quat_tf.setRPY(0., 0., (prev_yaw + diff_yaw));
   tf2::convert(quat_tf, result_odom.pose.pose.orientation);
 
-  return result_odom;
+  result_odom.header.stamp = node_->get_clock()->now();
+  odom_ = result_odom;
 }
 
 // Distance calculation
 double NekomimiBotWheelOdometry::distance_calculation(double wheel_delta_pos) {
-  return WHEEL_DIAMETER/2. * wheel_delta_pos;
+  if (M_PI < fabsf(wheel_delta_pos)) wheel_delta_pos -= 2*M_PI * wheel_delta_pos / fabsf(wheel_delta_pos);
+  return WHEEL_RADIUS * wheel_delta_pos;
 }
 
-// Pose broadcaster (Generate a pose from Odometry)
-void NekomimiBotWheelOdometry::pose_broadcaster(const nav_msgs::msg::Odometry &tf_odom) {
+// Pose broadcaster (Generate a TF pose from Odometry)
+void NekomimiBotWheelOdometry::pose_broadcaster() {
   geometry_msgs::msg::TransformStamped transformStamped;
 
-  transformStamped.header          = tf_odom.header;
-  transformStamped.child_frame_id  = tf_odom.child_frame_id;
+  transformStamped.header          = odom_.header;
+  transformStamped.child_frame_id  = odom_.child_frame_id;
 
-  transformStamped.transform.translation.x = tf_odom.pose.pose.position.x;
-  transformStamped.transform.translation.y = tf_odom.pose.pose.position.y;
-  transformStamped.transform.translation.z = tf_odom.pose.pose.position.z;
-  transformStamped.transform.rotation      = tf_odom.pose.pose.orientation;
+  transformStamped.transform.translation.x = odom_.pose.pose.position.x;
+  transformStamped.transform.translation.y = odom_.pose.pose.position.y;
+  transformStamped.transform.translation.z = odom_.pose.pose.position.z;
+
+  transformStamped.transform.rotation      = odom_.pose.pose.orientation;
 
   tf_broadcaster_->sendTransform(transformStamped);
 }

@@ -20,39 +20,36 @@ private:
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 
 public:
-
   // robot parameters
-  double LIMIT_VEL_VALUE;
-  double WHEEL_DIAMETER;
-  double WHEEL_DISTANCE;
-  int ODOMETRY_RATE;
-  std::array<double, 2> BODY_ROTATE_LIMIT;
+  int CYCLE_FEQUENCY;
+  double WHEEL_DISTANCE;   // Wheel Distance between left and right [m]
+  double WHEEL_RADIUS;     // Wheel Radius [m]
+
+  double current_body_roll_pos = 0.;
+  double current_drive_pos[2] = {0, };
+  double prev_body_roll_pos = 0.;
+  double prev_drive_pos[2] = {0, };
+
+  nav_msgs::msg::Odometry odom_;
 
   NekomimiBotWheelOdometry(rclcpp::Node* node) : node_(node) {
-    RCLCPP_INFO(node_->get_logger(), "NekomimiBotWheelOdometry initialized.");
-
     // get parameter
-    LIMIT_VEL_VALUE = node_->get_parameter("max_motor_velocity").as_double();
-    WHEEL_DIAMETER = node_->get_parameter("wheel_diameter").as_double();
+    CYCLE_FEQUENCY = node_->get_parameter("cycle_fequency").as_int();
     WHEEL_DISTANCE = node_->get_parameter("wheel_distance").as_double();
-    ODOMETRY_RATE = node_->get_parameter("odometry_rate").as_int();
-    BODY_ROTATE_LIMIT[0] = node_->get_parameter("body_roll_min").as_double();
-    BODY_ROTATE_LIMIT[1] = node_->get_parameter("body_roll_max").as_double();
+    WHEEL_RADIUS = node_->get_parameter("wheel_radius").as_double();
+    RCLCPP_INFO(node_->get_logger(), "NekoMimi Bot Wheel Odometry initialized.");
 
     // Broadcaster initialize
     tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(node_);
   }
   ~NekomimiBotWheelOdometry() {
-  RCLCPP_INFO(node_->get_logger(), "NekomimiBotWheelOdometry destroyed.");
+    RCLCPP_INFO(node_->get_logger(), "NekoMimi Bot Wheel Odometry destroyed.");
   }
 
-  nav_msgs::msg::Odometry odom(
-    std::map<std::string, double> wheels_curt_pos,
-    std::map<std::string, double> wheels_prev_pos,
-    nav_msgs::msg::Odometry prev_odom);
+  void update_odom();
 
   double distance_calculation(double wheel_delta_pos);
-  void pose_broadcaster(const nav_msgs::msg::Odometry &tf_odom);
+  void pose_broadcaster();
 };
 
 #endif // NEKOMIMI_BOT_WHEEL_ODOMETRY_HPP_

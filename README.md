@@ -53,10 +53,7 @@
 ## 概要
 ![SOBIT_MINI](nekomimi_bot/docs/img/nekomimi_bot.png)
 
-SOBITSが開発した双腕型モバイルマニピュレータ（NekoMimi Bot）を動かすためのライブラリです．
-
-> [!warning]
-> 初心者の場合，実機のロボットを扱う際に，先輩方に付き添ってもらいながらロボットを動かしましょう．
+NekoMimi Botを動かすためのライブラリ．
 
 ## セットアップ
 ここで，本レポジトリのセットアップ方法について説明します．

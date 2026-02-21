@@ -18,6 +18,7 @@
   <!-- Add variables -->
   <xacro:arg name="enable_gz"                 default="False" />
   <xacro:arg name="robot_name"                default="nekomimi_bot" />
+  <xacro:arg name="ftc_sl_port"               default="/dev/ttyUSB0" />
 
 
   <!-- Conection -->

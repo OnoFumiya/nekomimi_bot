@@ -42,7 +42,15 @@ def launch_gz(context, *args, **kwargs):
     robot_coords_z = LaunchConfiguration('robot_coords_z').perform(context)
     robot_coords_Y = LaunchConfiguration('robot_coords_Y').perform(context)
 
-    enable_gz   = LaunchConfiguration('enable_gz').perform(context)
+    enable_gz = LaunchConfiguration('enable_gz').perform(context)
+
+    ftc_sl_port = ''
+    lds_sl_port = ''
+    if enable_gz == 'False':
+        ftc_sl_port = str(os.environ.get('FTC_SL_PORT'))
+        print('Feetech Serial Port : ' + ftc_sl_port)
+        lds_sl_port = str(os.environ.get('LDS_SL_PORT'))
+        print('HLDS Serial Port : ' + lds_sl_port)
 
     robot_description = os.path.join(get_package_share_directory(
         'nekomimi_bot_description'), 
@@ -50,11 +58,18 @@ def launch_gz(context, *args, **kwargs):
         'nekomimi_bot_robot.urdf.xacro'
     )
 
+    wheel_controller_config = os.path.join(get_package_share_directory(
+        'nekomimi_bot_bringup'), 
+        'config',
+        'wheel_controller.yaml'
+    )
+
     robot_description_config = xacro.process_file(
         robot_description,
         mappings={
             'enable_gz'  : enable_gz,
             'robot_name' : robot_name,
+            'ftc_sl_port': ftc_sl_port,
         })
 
     if enable_gz == 'False':
@@ -73,31 +88,63 @@ def launch_gz(context, *args, **kwargs):
             output="screen",
         )
 
-    joint_state_broadcaster = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller',
-            '--set-state', 'active',
-            '--controller-manager', robot_name+'/controller_manager',
-            'joint_state_broadcaster'
+        lidar_node = IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([
+                PathJoinSubstitution([
+                    FindPackageShare('hls_lfcd_lds_driver'),
+                    'launch',
+                    'hlds_laser.launch.py'
+                ])
+            ]),
+            launch_arguments={
+                'port': lds_sl_port,
+                'namespace': robot_name,
+                'frame_id' : 'lidar_link',
+            }.items(),
+        )
+
+    joint_state_broadcaster = Node(
+        package='controller_manager',
+        executable='spawner',
+        # name='joint_state_broadcaster',
+        namespace=robot_name,
+        arguments=[
+            'joint_state_broadcaster',
+            '-c', 'controller_manager',
         ],
-        output='screen'
     )
 
-    joint_trajectory_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller',
-            '--set-state', 'active',
-            '--controller-manager', robot_name+'/controller_manager',
-            'joint_trajectory_controller'
+    joint_trajectory_controller = Node(
+        package='controller_manager',
+        executable='spawner',
+        # name='joint_trajectory_controller',
+        namespace=robot_name,
+        arguments=[
+            'joint_trajectory_controller',
+            '-c', 'controller_manager', '--activate'
         ],
-        output='screen'
     )
 
-    velocity_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller',
-            '--set-state', 'active',
-            '--controller-manager', robot_name+'/controller_manager',
-            'velocity_controller'
+    mobile_base_position_controller = Node(
+        package='controller_manager',
+        executable='spawner',
+        # name='mobile_base_position_controller',
+        namespace=robot_name,
+        arguments=[
+            'mobile_base_position_controller',
+            '-c', 'controller_manager', '--activate'
         ],
-        output='screen'
+    )
+
+    velocity_controller = Node(
+        package='controller_manager',
+        executable='spawner',
+        # name='velocity_controller',
+        namespace=robot_name,
+        arguments=[
+            'velocity_controller',
+            '-c', 'controller_manager', '--activate'
+        ],
     )
 
     robot_state_publisher_node = Node(
@@ -130,9 +177,10 @@ def launch_gz(context, *args, **kwargs):
     move_base_node = Node(
         package="nekomimi_bot_bringup",
         executable="nekomimi_bot_wheel_node",
-        name="nekomimi_bot_wheel_node",
+        name="wheel_controller",
         namespace=robot_name,
         parameters=[
+            wheel_controller_config,
             {"use_sim_time": True if enable_gz == 'True' else False},
         ],
         output="screen",
@@ -174,8 +222,10 @@ def launch_gz(context, *args, **kwargs):
             controller_manager,
             joint_state_broadcaster,
             joint_trajectory_controller,
+            mobile_base_position_controller,
             velocity_controller,
             robot_state_publisher_node,
+            lidar_node,
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=joint_state_broadcaster,
@@ -204,6 +254,12 @@ def launch_gz(context, *args, **kwargs):
                 event_handler=OnProcessExit(
                     target_action=joint_state_broadcaster,
                     on_exit=[joint_trajectory_controller],
+                )
+            ),
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=joint_state_broadcaster,
+                    on_exit=[mobile_base_position_controller],
                 )
             ),
             RegisterEventHandler(

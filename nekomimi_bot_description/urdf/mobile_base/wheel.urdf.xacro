@@ -2,13 +2,13 @@
 <robot name="nekomimi_bot"
        xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:macro name="wheel_base" params="parent prefix pose_y pose_yaw axis_y">
+  <xacro:macro name="wheel_base" params="parent prefix pose_yaw axis_y">
 
     <joint name="${prefix}_joint" type="continuous">
-      <origin xyz="0.0 ${pose_y} -0.01" rpy="0.0 0.0 0.0" />
+      <origin xyz="0.0 ${axis_y*0.0725} -0.01" rpy="0.0 0.0 0.0" />
       <parent link="${parent}" />
       <child link="${prefix}_link" />
-      <axis xyz="0.0 ${axis_y} 0.0 " />
+      <axis xyz="0.0 1.0 0.0 " />
       <limit effort="10.0" velocity="7.913672" />
     </joint>
 
@@ -39,8 +39,8 @@
 
 
   <xacro:macro name="wheel" params="parent prefix">
-    <xacro:wheel_base parent="${parent}_link" prefix="left_${prefix}"  pose_y="0.0725"  pose_yaw="${M_PI/2}"  axis_y="1.0"  />
-    <xacro:wheel_base parent="${parent}_link" prefix="right_${prefix}" pose_y="-0.0725" pose_yaw="${-M_PI/2}" axis_y="-1.0" />
+    <xacro:wheel_base parent="${parent}_link" prefix="left_${prefix}"  pose_yaw="${M_PI/2}"  axis_y="1.0"  />
+    <xacro:wheel_base parent="${parent}_link" prefix="right_${prefix}" pose_yaw="${-M_PI/2}" axis_y="-1.0" />
   </xacro:macro>
 
 </robot>

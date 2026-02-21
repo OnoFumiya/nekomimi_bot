@@ -9,8 +9,9 @@
           <plugin>ign_ros2_control/IgnitionSystem</plugin>
         </xacro:if>
         <xacro:unless value="${$(arg enable_gz)}">
+          <xacro:property name="ftc_sl_port" value="$(arg ftc_sl_port)"/>
           <plugin>feetech_ros2_driver/FeetechHardwareInterface</plugin>
-          <param name="usb_port">/dev/ttyUSB0</param>
+          <param name="usb_port">${ftc_sl_port}</param>
         </xacro:unless>
       </hardware>
 
@@ -21,7 +22,7 @@
           <param name="id">21</param>
           <param name="p_cofficient">8</param>
           <param name="offset">2048</param>
-          <param name="counter_rotation">1</param>
+          <param name="counter_rotation">0</param>
         </xacro:unless>
         <command_interface name="position"/>
         <state_interface name="position"/>
@@ -75,7 +76,7 @@
           <param name="id">12</param>
           <!-- <param name="p_cofficient">8</param> -->
           <!-- <param name="offset">2048</param> -->
-          <param name="counter_rotation">1</param>
+          <param name="counter_rotation">0</param>
         </xacro:unless>
         <command_interface name="velocity"/>
         <state_interface name="position"/>
