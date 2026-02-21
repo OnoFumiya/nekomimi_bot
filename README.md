@@ -51,7 +51,7 @@
 </details>
 
 ## 概要
-![NEKOMIMI BOT](nekomimi_bot/docs/img/nekomimi_bot.png)
+![NEKOMIMI BOT](nekomimi_bot.png)
 
 NekoMimi Botを動かすためのライブラリ．
 
