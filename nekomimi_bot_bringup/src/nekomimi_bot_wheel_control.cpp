@@ -8,19 +8,19 @@ void NekomimiBotWheelControl::update_wheel_goals() {
 
   if ((vel_twist.linear.x == 0.) && (vel_twist.linear.y == 0.) && (vel_twist.angular.z == 0.)) {
 
-    goal_body_roll_pos = current_body_roll_pos;
-    goal_drive_vel[0] = goal_drive_vel[1] = 0.;
-    // if ((float)(BODY_ROLL_MAX_VEL/((float)CYCLE_FEQUENCY)) < fabsf(current_body_roll_pos)) 
-    //   goal_body_roll_pos = current_body_roll_pos - (float)(BODY_ROLL_MAX_VEL/((float)CYCLE_FEQUENCY)) * current_body_roll_pos / fabsf(current_body_roll_pos);
-    // else 
-    //   goal_body_roll_pos = 0.;
+    // goal_body_roll_pos = current_body_roll_pos;
+    // goal_drive_vel[0] = goal_drive_vel[1] = 0.;
+    if ((float)(BODY_ROLL_MAX_VEL/((float)CYCLE_FEQUENCY)) < fabsf(current_body_roll_pos)) 
+      goal_body_roll_pos = current_body_roll_pos - (float)(BODY_ROLL_MAX_VEL/((float)CYCLE_FEQUENCY)) * current_body_roll_pos / fabsf(current_body_roll_pos);
+    else 
+      goal_body_roll_pos = 0.;
 
-    // if (fabsf(current_body_roll_pos) < DRIVING_STATUS_THRESHOLD) 
-    //   goal_drive_vel[0] = goal_drive_vel[1] = 0.;
-    // else {
-    //   goal_drive_vel[0] = -(goal_body_roll_pos - current_body_roll_pos) * CYCLE_FEQUENCY * (WHEEL_DISTANCE/2.) / WHEEL_RADIUS;
-    //   goal_drive_vel[1] =  (goal_body_roll_pos - current_body_roll_pos) * CYCLE_FEQUENCY * (WHEEL_DISTANCE/2.) / WHEEL_RADIUS;
-    // }
+    if (fabsf(current_body_roll_pos) < DRIVING_STATUS_THRESHOLD) 
+      goal_drive_vel[0] = goal_drive_vel[1] = 0.;
+    else {
+      goal_drive_vel[0] = -(goal_body_roll_pos - current_body_roll_pos) * CYCLE_FEQUENCY * (WHEEL_DISTANCE/2.) / WHEEL_RADIUS;
+      goal_drive_vel[1] =  (goal_body_roll_pos - current_body_roll_pos) * CYCLE_FEQUENCY * (WHEEL_DISTANCE/2.) / WHEEL_RADIUS;
+    }
 
   } else if ((vel_twist.linear.x == 0.) && (vel_twist.linear.y == 0.)) {
     if ((current_body_roll_pos * vel_twist.angular.z) > 0.) {

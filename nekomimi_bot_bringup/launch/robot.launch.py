@@ -100,6 +100,8 @@ def launch_gz(context, *args, **kwargs):
                 'port': lds_sl_port,
                 'namespace': robot_name,
                 'frame_id' : 'lidar_link',
+                'angle_min': '-1.57',
+                'angle_max':  '1.57',
             }.items(),
         )
 

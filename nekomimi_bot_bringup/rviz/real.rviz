@@ -137,7 +137,7 @@ Visualization Manager:
       Axis: Z
       Channel Name: intensity
       Class: rviz_default_plugins/LaserScan
-      Color: 255; 0; 0
+      Color: 255; 0; 25
       Color Transformer: FlatColor
       Decay Time: 0
       Enabled: true
@@ -166,20 +166,33 @@ Visualization Manager:
       Enabled: false
       Frame Timeout: 15
       Frames:
-        All Enabled: true
+        All Enabled: false
       Marker Scale: 0.25
       Name: TF
       Show Arrows: true
       Show Axes: true
-      Show Names: false
+      Show Names: true
       Tree:
         {}
       Update Interval: 0
       Value: false
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: HumanPosition
+      Namespaces:
+        dr_spaam_ros: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+        Value: /nekomimi_bot/dr_spaam_rviz
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: nekomimi_bot/odom
+    Fixed Frame: nekomimi_bot/base_footprint
     Frame Rate: 30
   Name: root
   Tools:
@@ -222,25 +235,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/ThirdPersonFollower
-      Distance: 0.9317780137062073
+      Distance: 1.0790154933929443
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 5.050760876201821e-08
-        Y: -6.001064178917659e-08
+        X: 0
+        Y: 0
         Z: 0
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.5553979873657227
-      Target Frame: nekomimi_bot/odom
+      Pitch: 0.7153984308242798
+      Target Frame: nekomimi_bot/base_footprint
       Value: ThirdPersonFollower (rviz_default_plugins)
-      Yaw: 2.4953994750976562
+      Yaw: 2.1203982830047607
     Saved: ~
 Window Geometry:
   Displays:

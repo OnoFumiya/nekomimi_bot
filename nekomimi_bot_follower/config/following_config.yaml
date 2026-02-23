@@ -1,0 +1,27 @@
+/**:
+  dr_spaam_ros:
+    ros__parameters:
+      scan_topic_name: "/nekomimi_bot/scan"             # LaserScan Topic name
+      weight_file : "ckpt_jrdb_ann_ft_dr_spaam_e20.pth" # name of the weight file
+      detector_model : "DR-SPAAM"                       # Set model name: DROW3 or DR-SPAAM
+      use_gpu : False                                   # Set to True to use GPU
+      conf_thresh : 0.4                                 # Set confidence threshold
+      stride : 15                                       # Downsample scans for faster inference
+      panoramic_scan : True                             # Set to True if the scan covers 360 degree
+      queue_size: 1                                     # Set Queue size of Pub/Sub
+
+  pantilt_follower:
+    ros__parameters:
+      human_pose_topic: "/nekomimi_bot/dr_spaam_detections"
+      joint_topic: "/nekomimi_bot/joint_trajectory_controller/joint_trajectory"
+      pan_joint: "head_pan_joint"
+      tilt_joint: "head_tilt_joint"
+      use_rollpitchyaw: True
+
+  velocity_follower:
+    ros__parameters:
+      velocity_topic: "/nekomimi_bot/cmd_vel"
+      timeout_sec: 0.5
+      max_linear_vel: 0.2
+      max_angular_vel: 0.5
+      publish_rate: 10
