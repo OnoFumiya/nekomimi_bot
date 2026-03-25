@@ -13,24 +13,23 @@
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2}" />
         <geometry>
-          <mesh filename="file://$(find nekomimi_bot_description)/meshes/body/body_plate.stl" scale="0.001 0.001 0.001" />
+          <mesh filename="file://$(find nekomimi_bot_description)/meshes/body/body_core.stl" scale="0.001 0.001 0.001" />
         </geometry>
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2}" />
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
-          <!-- <box size="0.1 0.1 0.1" /> -->
-          <mesh filename="file://$(find nekomimi_bot_description)/meshes/body/body_plate.stl" scale="0.001 0.001 0.001" />
+          <cylinder radius="0.1" length="0.03"/>
         </geometry>
       </collision>
-      <inertial>
+      <!-- <inertial>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <mass value="1.0" />
         <inertia ixx="0.083" ixy="0.0" ixz="0.0"
                  iyy="0.083" iyz="0.0"
                  izz="0.001" />
-      </inertial>
+      </inertial> -->
     </link>
 
     <joint name="${prefix}_cover_joint" type="fixed">
@@ -47,10 +46,9 @@
         </geometry>
         <material name="black" />
       </visual>
-      <collision>
+      <!-- <collision>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2}" />
         <geometry>
-          <!-- <box size="0.1 0.1 0.1" /> -->
           <mesh filename="file://$(find nekomimi_bot_description)/meshes/body/body_cover.stl" scale="0.001 0.001 0.001" />
         </geometry>
       </collision>
@@ -60,7 +58,7 @@
         <inertia ixx="0.083" ixy="0.0" ixz="0.0"
                  iyy="0.083" iyz="0.0"
                  izz="0.001" />
-      </inertial>
+      </inertial> -->
     </link>
   </xacro:macro>
 </robot>

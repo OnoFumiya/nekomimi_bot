@@ -18,7 +18,7 @@
         </geometry>
         <material name="dark_grey" />
       </visual>
-      <collision>
+      <!-- <collision>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
           <box size="0.1 0.1 0.1" />
@@ -30,7 +30,7 @@
         <inertia ixx="0.083" ixy="0.0" ixz="0.0"
                  iyy="0.083" iyz="0.0"
                  izz="0.001" />
-      </inertial>
+      </inertial> -->
     </link>
   </xacro:macro>
 

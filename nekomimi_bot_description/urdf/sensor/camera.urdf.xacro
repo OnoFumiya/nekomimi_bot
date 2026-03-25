@@ -6,7 +6,6 @@
 
     <joint name="realsense_d405" type="fixed">
       <origin xyz="-0.00982012 0.0 0.0305" rpy="0.0 0.0 0.0" />
-      <!-- <origin xyz="-0.00982012 0.0 0.0515" rpy="0.0 0.0 0.0" /> -->
       <parent link="${parent}_link" />
       <child link="realsense_link" />
     </joint>
@@ -14,13 +13,12 @@
     <link name="realsense_link">
       <visual>
         <origin xyz="0.02293 0.0 0.021" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
-        <!-- <origin xyz="0.02293 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" /> -->
         <geometry>
           <mesh filename="file://$(find nekomimi_bot_description)/meshes/sensor/realsense_d405.stl" scale="0.001 0.001 0.001" />
         </geometry>
         <material name="grey" />
       </visual>
-      <collision>
+      <!-- <collision>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
           <box size="0.1 0.1 0.1" />
@@ -32,7 +30,7 @@
         <inertia ixx="0.083" ixy="0.0" ixz="0.0"
                  iyy="0.083" iyz="0.0"
                  izz="0.001" />
-      </inertial>
+      </inertial> -->
     </link>
   </xacro:macro>
 

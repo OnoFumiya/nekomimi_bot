@@ -67,5 +67,5 @@ def generate_launch_description():
         namespace_arg,
         dr_spaam_node_cmd,
         pantilt_follower_cmd,
-        velocity_follower_cmd,
+        # velocity_follower_cmd,
     ])
