@@ -16,6 +16,7 @@ install(DIRECTORY
   meshes
   urdf
   robots
+  worlds
   DESTINATION share/${PROJECT_NAME}
 )
 

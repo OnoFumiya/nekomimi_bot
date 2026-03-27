@@ -17,7 +17,8 @@ def generate_launch_description():
 
     rviz_config = os.path.join(get_package_share_directory(bringup_pkg), 'rviz', 'gazebo.rviz')
     # world_file = os.path.join(get_package_share_directory('nekomimi_bot_gazebo'), 'worlds', 'nekoneko.world.xacro')
-    world_file = os.path.join(get_package_share_directory('sobits_gazebo_worlds'), 'worlds', 'rcjo2025_arena.world.xacro')
+    # world_file = os.path.join(get_package_share_directory('sobits_gazebo_worlds'), 'worlds', 'rcjo2025_arena.world.xacro')
+    world_file = os.path.join(get_package_share_directory('nekomimi_bot_description'), 'worlds', 'empty.sdf')
 
     return LaunchDescription([
         IncludeLaunchDescription(
@@ -54,10 +55,10 @@ def generate_launch_description():
             launch_arguments={
                 'robot_name': robot_name if robot_id == 0 else robot_name + '_' + str(robot_id),
                 'enable_gz'   : 'True',
-                'robot_coords_x': '-5.5',    # x 
-                'robot_coords_y': '1.5',    # y
+                'robot_coords_x': '0.0', # x 
+                'robot_coords_y': '0.0', # y
                 'robot_coords_z': '0.0', # z
-                'robot_coords_Y': '0.0',    # yaw
+                'robot_coords_Y': '0.0', # yaw
             }.items()
         ),
 
