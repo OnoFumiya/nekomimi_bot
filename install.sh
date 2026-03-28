@@ -95,7 +95,8 @@ export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 # Install Each library
 sudo apt install -y \
     mpg321 \
-    zenity
+    zenity \
+    xterm
 
 # Set up environment variables
 echo "" >> /home/$USERNAME/.bashrc

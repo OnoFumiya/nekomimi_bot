@@ -27,7 +27,7 @@ def generate_launch_description():
 
     # Node configuration
     keyboard_teleop_node = Node(
-        package='sobits_nav',
+        package='nekomimi_bot_navigation',
         executable='keyboard_teleop',
         name='keyboard_teleop',
         output='screen',
