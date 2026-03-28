@@ -12,7 +12,7 @@ ros_packages=(
     "feetech_ros2_driver"
     "hls_lfcd_lds_driver"
     "realsense_ros"
-    # "gazebo_world"
+    "gazebo_worlds"
 )
 
 #Clone all packages

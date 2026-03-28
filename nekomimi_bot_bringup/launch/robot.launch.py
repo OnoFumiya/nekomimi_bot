@@ -23,6 +23,8 @@ def generate_launch_description():
 
     arg_enable_gz   = DeclareLaunchArgument('enable_gz'  , default_value='False')
 
+    arg_enable_gz_lidar = DeclareLaunchArgument('enable_gz_lidar', default_value='True')
+
     return LaunchDescription([
         arg_robot_name,
         arg_robot_coords_x,
@@ -30,6 +32,7 @@ def generate_launch_description():
         arg_robot_coords_z,
         arg_robot_coords_Y,
         arg_enable_gz,
+        arg_enable_gz_lidar,
         OpaqueFunction(function = launch_gz),
     ])
 
@@ -43,6 +46,8 @@ def launch_gz(context, *args, **kwargs):
     robot_coords_Y = LaunchConfiguration('robot_coords_Y').perform(context)
 
     enable_gz = LaunchConfiguration('enable_gz').perform(context)
+
+    enable_gz_lidar = LaunchConfiguration('enable_gz_lidar').perform(context)
 
     ftc_sl_port = ''
     lds_sl_port = ''
@@ -67,9 +72,10 @@ def launch_gz(context, *args, **kwargs):
     robot_description_config = xacro.process_file(
         robot_description,
         mappings={
-            'enable_gz'  : enable_gz,
-            'robot_name' : robot_name,
-            'ftc_sl_port': ftc_sl_port,
+            'enable_gz'      : enable_gz,
+            'robot_name'     : robot_name,
+            'enable_gz_lidar': enable_gz_lidar,
+            'ftc_sl_port'    : ftc_sl_port,
         })
 
     if enable_gz == 'False':
@@ -210,7 +216,6 @@ def launch_gz(context, *args, **kwargs):
             namespace=robot_name,
             arguments=[
                         "/" + robot_name + "/joint_states" + "@sensor_msgs/msg/JointState" + "[ignition.msgs.Model",
-                        # "/" + robot_name + "/base_front_camera/camera_info" + "@sensor_msgs/msg/CameraInfo" + "[ignition.msgs.CameraInfo",
                         # "/" + robot_name + "/hand_camera/depth" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
                         # "/" + robot_name + "/hand_camera/depth/points" + "@sensor_msgs/msg/PointCloud2" + "[ignition.msgs.PointCloudPacked",
                         "/" + robot_name + "/scan" + "@sensor_msgs/msg/LaserScan" + "[ignition.msgs.LaserScan",
