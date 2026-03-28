@@ -21,7 +21,7 @@
         <material name="wheel" />
       </visual>
       <collision>
-        <origin xyz="0.0 ${axis_y*0.0025} 0.0" rpy="${axis_y*M_PI/2} 0.0 0.0" />
+        <origin xyz="0.0 0.0 0.0" rpy="${axis_y*M_PI/2} 0.0 0.0" />
         <geometry>
           <cylinder radius="0.025" length="0.01"/>
         </geometry>
