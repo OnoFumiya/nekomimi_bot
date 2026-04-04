@@ -446,10 +446,8 @@ def generate_launch_description():
     )
 
     flex_nav_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('flex_nav'), 
-                                                   'launch', 
-                                                   'flex_nav.launch.py')),
-        launch_arguments={'robot_name': robot_name}.items(),
+        PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 
+                                                   'launch', 'include', 'flex_nav.launch.py')),
         condition=IfCondition(use_flex_nav),
     )
 

@@ -29,6 +29,21 @@ for ((i = 0; i < ${#ros_packages[@]}; i++)) {
     fi
 }
 
+# Additional packages for navigation of TeamSOBITS repository
+if ros2 pkg list 2>/dev/null | grep -q "^flex_nav$"; then
+    echo "flex_nav is exist. Skipping cloning and installation."
+else
+    echo "Clonning: flex_nav"
+    git clone -b $ROS_DISTRO-devel https://github.com/TeamSOBITS/flex_nav.git
+fi
+
+if ros2 pkg list 2>/dev/null | grep -q "^explore_lite$"; then
+    echo "explore_ros2 is exist. Skipping cloning and installation."
+else
+    echo "Clonning: explore_ros2"
+    git clone -b $ROS_DISTRO-devel https://github.com/TeamSOBITS/explore_ros2.git
+fi
+
 # Go back to previous directory
 cd ${DIR}
 
