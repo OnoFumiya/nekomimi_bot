@@ -7,7 +7,7 @@
       <gazebo reference="head_camera_link">
         <sensor name="head_camera_color" type="camera">
           <pose>0.05 0.0 0.0 0.0 0.0 0.0</pose>
-          <ignition_frame_id>${robot_name}/head_camera_optical_frame</ignition_frame_id>
+          <gz_frame_id>${robot_name}/head_camera_optical_frame</gz_frame_id>
           <topic>${robot_name}/head_camera_base/color/image_raw</topic>
           <always_on>1</always_on>
           <visualize>true</visualize>
@@ -32,7 +32,7 @@
       <gazebo reference="head_camera_link">
         <sensor name="head_camera_depth" type="depth_camera">
           <pose>0.05 0.0 0.0 0.0 0.0 0.0</pose>
-          <ignition_frame_id>${robot_name}/head_camera_optical_frame</ignition_frame_id>
+          <gz_frame_id>${robot_name}/head_camera_optical_frame</gz_frame_id>
           <topic>${robot_name}/head_camera_base/depth/image_rect_raw</topic>
           <always_on>1</always_on>
           <visualize>true</visualize>
@@ -56,7 +56,7 @@
       <gazebo reference="lidar_link">
         <sensor name="lidar" type="gpu_lidar">
           <pose>0 0 0 0 0 0</pose>
-          <ignition_frame_id>${robot_name}/lidar_link</ignition_frame_id>
+          <gz_frame_id>${robot_name}/lidar_link</gz_frame_id>
           <topic>${robot_name}/scan</topic>
           <always_on>1</always_on>
           <visualize>true</visualize>

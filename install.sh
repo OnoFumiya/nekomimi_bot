@@ -48,34 +48,34 @@ fi
 cd ${DIR}
 
 # Download required dependencies
-python3 -m pip install \
+python3 -m pip install --break-system-packages \
     transforms3d
 
 # Download ROS packages
-sudo apt update
-sudo apt install -y \
+sudo apt-get update
+sudo apt-get install -y \
     ros-$ROS_DISTRO-ros2-control \
     ros-$ROS_DISTRO-ros2-controllers \
+    ros-$ROS_DISTRO-control-msgs \
     ros-$ROS_DISTRO-control-toolbox \
     ros-$ROS_DISTRO-controller-interface \
     ros-$ROS_DISTRO-controller-manager \
+    ros-$ROS_DISTRO-controller-manager-msgs \
     ros-$ROS_DISTRO-position-controllers \
     ros-$ROS_DISTRO-velocity-controllers \
     ros-$ROS_DISTRO-effort-controllers \
     ros-$ROS_DISTRO-joint-trajectory-controller \
-    ros-$ROS_DISTRO-joint-group-impedance-controller \
     ros-$ROS_DISTRO-joint-state-publisher \
     ros-$ROS_DISTRO-joint-state-publisher-gui \
     ros-$ROS_DISTRO-joint-state-broadcaster \
     ros-$ROS_DISTRO-joint-limits \
-    ros-$ROS_DISTRO-robot-controllers \
-    ros-$ROS_DISTRO-robot-controllers-interface \
     ros-$ROS_DISTRO-robot-state-publisher \
     ros-$ROS_DISTRO-hardware-interface \
     ros-$ROS_DISTRO-transmission-interface \
     ros-$ROS_DISTRO-urdf \
     ros-$ROS_DISTRO-urdf-launch \
     ros-$ROS_DISTRO-xacro \
+    ros-$ROS_DISTRO-moveit \
     ros-$ROS_DISTRO-std-msgs \
     ros-$ROS_DISTRO-geometry-msgs \
     ros-$ROS_DISTRO-sensor-msgs \
@@ -87,13 +87,30 @@ sudo apt install -y \
     ros-$ROS_DISTRO-tf-transformations \
     ros-$ROS_DISTRO-joy-linux \
     ros-$ROS_DISTRO-launch \
-    ros-$ROS_DISTRO-launch-ros
+    ros-$ROS_DISTRO-launch-ros \
+    ros-$ROS_DISTRO-gz-ros2-control \
+    ros-$ROS_DISTRO-actuator-msgs \
+    ros-$ROS_DISTRO-gps-msgs \
+    ros-$ROS_DISTRO-ros-gz-bridge \
+    ros-$ROS_DISTRO-ros-gz-sim \
+    ros-$ROS_DISTRO-ros-gz-interfaces \
+    ros-$ROS_DISTRO-usb-cam
 
-# Install Gazebo Fortress with binaries
-sudo apt install -y \
-    ros-$ROS_DISTRO-ros-gz \
-    ros-$ROS_DISTRO-ign-ros2-control \
-    ros-$ROS_DISTRO-ign-ros2-control-demos
+# Set up the environment
+sudo usermod -aG dialout $USERNAME
+
+# Install Gazebo Harmonic with binaries
+sudo apt-get update
+sudo apt-get install -y \
+    curl \
+    mpg321 \
+    lsb-release gnupg
+
+sudo curl https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
+sudo apt-get update
+sudo apt-get install -y \
+    gz-harmonic
 
 # Install Navigation package
 sudo apt install -y \
