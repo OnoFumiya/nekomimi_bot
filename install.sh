@@ -12,6 +12,7 @@ ros_packages=(
     "feetech_ros2_driver"
     "hls_lfcd_lds_driver"
     "realsense_ros"
+    "2d_lidar_person_detection"
     "gazebo_worlds"
 )
 
