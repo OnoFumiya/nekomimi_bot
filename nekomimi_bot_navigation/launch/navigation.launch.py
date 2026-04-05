@@ -1,454 +1,329 @@
+# Copyright (c) 2018 Intel Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import os
 
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, GroupAction, SetEnvironmentVariable, IncludeLaunchDescription, OpaqueFunction
-from launch.conditions import IfCondition, UnlessCondition
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, PythonExpression
-from launch_ros.actions import LoadComposableNodes
-from launch_ros.actions import Node
-from launch_ros.actions import PushRosNamespace
-from launch_ros.descriptions import ComposableNode, ParameterFile
-from nav2_common.launch import RewrittenYaml
+from launch.actions import (
+    DeclareLaunchArgument,
+    GroupAction,
+    IncludeLaunchDescription,
+    SetEnvironmentVariable,
+    SetLaunchConfiguration,
+    OpaqueFunction,
+)
 
+from launch.conditions import IfCondition
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, PythonExpression
+from launch_ros.actions import Node
+from launch_ros.actions import PushROSNamespace
+from launch_ros.descriptions import ParameterFile
+from launch_ros.substitutions import FindPackageShare
+from nav2_common.launch import ReplaceString, RewrittenYaml
 
 
 def generate_launch_description():
-    ########## Customizable parameters ##########
-    declare_map_yaml_cmd = DeclareLaunchArgument(
-        'map',
-        default_value=os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'map', 'map_example.yaml'),
-        description='Full path to map yaml file to load')
 
-    declare_location_yaml_cmd = DeclareLaunchArgument(
-        'location_file_path',
-        default_value=os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'location', 'location_example.yaml'),
-        description='Full path to location file to load')
+    ############################## Customizable parameters ##############################
+    # Starting Point on the Map
+    start_x   = 0.0
+    start_y   = 0.0
+    start_yaw = 0.0
 
-    declare_keepout_map_yaml_cmd = DeclareLaunchArgument(
-        'keepout_map',
-        default_value=os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'map', 'map_example_keepout_mask.yaml'),
-        description='Full path to map yaml file to load')
+    # Map File Path
+    map_file = os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'map', 'map_example.yaml')
 
-    declare_use_keepout_filter_cmd = DeclareLaunchArgument(
-        'use_keepout_filter',
-        default_value='False',
-        description='Whether to use keepout filter')
+    # Location File Path
+    location_file = os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'location', 'location_example.yaml')
 
-    declare_flex_nav_cmd = DeclareLaunchArgument(
-        'use_flex_nav',
-        default_value="False",
-        description="Whether to activate Flex nav")
+    # Use Gazebo
+    use_gazebo = False
 
-    declare_initial_x_cmd = DeclareLaunchArgument(
-        'initial_x',
-        default_value="0.0",
-        description='initial_point x')
+    # Customize of Costmaps
+    cost_map = ["scan"]
+    # "scan" "rgbd" TODO: "out_color" "objects"
 
-    declare_initial_y_cmd = DeclareLaunchArgument(
-        'initial_y',
-        default_value="0.0",
-        description='initial_point y')
+    # Keepout Filter Map Config
+    use_keepoutmap = False
+    keepout_map_file = os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'map', 'map_example.yaml')
 
-    declare_initial_yaw_cmd = DeclareLaunchArgument(
-        'initial_yaw',
-        default_value="0.0",
-        description='initial_rotation yaw')
+    # Pan-Tilt Movement Config
+    use_pantilt_move = False
 
-    declare_use_sim_time_cmd = DeclareLaunchArgument(
-        'use_sim_time',
-        default_value='false',
-        description='Use simulation (Gazebo) clock if true')
-    #############################################
+    #####################################################################################
 
 
+
+    # Create the launch configuration variables
     namespace = LaunchConfiguration('namespace')
     use_namespace = LaunchConfiguration('use_namespace')
     slam = LaunchConfiguration('slam')
-    use_sim_time = LaunchConfiguration('use_sim_time')
-    autostart = LaunchConfiguration('autostart')
-
     map_yaml_file = LaunchConfiguration('map')
-    keepout_mask_yaml_file = LaunchConfiguration('keepout_map')
-    robot_name = LaunchConfiguration('robot_name')
-    params_file = LaunchConfiguration('params_file')
-    slamtool_param_file = LaunchConfiguration('slamtool_param_file')
-    use_rviz = LaunchConfiguration('use_rviz')
-
-    # use_location = LaunchConfiguration('use_location')
-    initial_x = LaunchConfiguration('initial_x')
-    initial_y = LaunchConfiguration('initial_y')
-    initial_yaw = LaunchConfiguration('initial_yaw')
-    location_file_path = LaunchConfiguration('location_file_path')
-    use_flex_nav = LaunchConfiguration('use_flex_nav')
-    velocity_topic_name = LaunchConfiguration('velocity_topic_name')
-    use_keepout_filter = LaunchConfiguration('use_keepout_filter')
-
+    keepout_map_yaml_file = LaunchConfiguration('keepout_map')  # Customize
+    use_keepout_map = LaunchConfiguration('use_keepout_map')  # Customize
+    location_yaml_file = LaunchConfiguration('location')  # Customize
+    use_rviz = LaunchConfiguration('use_rviz')  # Customize
+    use_sim_time = LaunchConfiguration('use_sim_time')
+    params_file = PathJoinSubstitution(
+        [FindPackageShare('nekomimi_bot_navigation'), 'config', 'nav2_config.yaml']
+    )
+    slamtool_param_file = PathJoinSubstitution(
+        [FindPackageShare('nekomimi_bot_navigation'), 'config', 'slam_config.yaml']
+    )
+    autostart = LaunchConfiguration('autostart')
     use_composition = LaunchConfiguration('use_composition')
-    container_name = LaunchConfiguration('container_name')
-    container_name_full = (namespace, '/', container_name)
     use_respawn = LaunchConfiguration('use_respawn')
     log_level = LaunchConfiguration('log_level')
+    use_localization = LaunchConfiguration('use_localization')
+    use_flex_nav = LaunchConfiguration('use_flex_nav')  # Customize
+    initial_x = LaunchConfiguration('initial_x')  # Customize
+    initial_y = LaunchConfiguration('initial_y')  # Customize
+    initial_yaw = LaunchConfiguration('initial_yaw')  # Customize
+    velocity_topic_name = LaunchConfiguration('velocity_topic_name')  # Customize
+    custom_costmap_layer = LaunchConfiguration('custom_costmap_layer')  # Customize
 
-    lifecycle_nodes = ['controller_server',
-                       'smoother_server',
-                       'planner_server',
-                       'behavior_server',
-                       'bt_navigator',
-                       'waypoint_follower',
-                       'velocity_smoother',
-                       ]
+    # Map fully qualified names to relative ones so the node's namespace can be prepended.
+    # In case of the transforms (tf), currently, there doesn't seem to be a better alternative
+    # https://github.com/ros/geometry2/issues/32
+    # https://github.com/ros/robot_state_publisher/pull/30
+    # TODO(orduno) Substitute with `PushNodeRemapping`
+    #              https://github.com/ros2/launch_ros/issues/56
+    remappings = [('/tf', 'tf'), ('/tf_static', 'tf_static')]
 
-    lifecycle_nodes_with_filter = lifecycle_nodes + [
-                       'keepout_filter_mask_server',
-                       'costmap_filter_info_server',
-                       ]
-
-    remappings = [('/tf', 'tf'),
-                  ('/tf_static', 'tf_static')]
-
-    # Create our own temporary YAML files that include substitutions
-    param_substitutions = {
-        'use_sim_time': use_sim_time,
-        'autostart': autostart,
-        'keepout_filter.enabled': use_keepout_filter
-    }
+    # Only it applys when `use_namespace` is True.
+    # '<robot_namespace>' keyword shall be replaced by 'namespace' launch argument
+    # in config file 'nav2_multirobot_params.yaml' as a default & example.
+    # User defined config file should contain '<robot_namespace>' keyword for the replacements.
+    params_file = ReplaceString(
+        source_file=params_file,
+        replacements={'<robot_namespace>': ('/', namespace)},
+        condition=IfCondition(use_namespace),
+    )
 
     configured_params = ParameterFile(
         RewrittenYaml(
             source_file=params_file,
             root_key=namespace,
-            param_rewrites=param_substitutions,
-            convert_types=True),
-        allow_substs=True)
+            param_rewrites={'use_sim_time': use_sim_time},
+            convert_types=True,
+        ),
+        allow_substs=True,
+    )
 
     stdout_linebuf_envvar = SetEnvironmentVariable(
-        'RCUTILS_LOGGING_BUFFERED_STREAM', '1')
-
-
-    declare_params_file_cmd = DeclareLaunchArgument(
-        'params_file', 
-        default_value=os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'config', 'nav2_config.yaml'), 
-        description='Full path to the parameters file.')
-
-    declare_slamtool_param_file_cmd = DeclareLaunchArgument(
-        'slamtool_param_file', 
-        default_value=os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'config', 'slam_config.yaml'), 
-        description='slam toolbox parameters file.')
-
-    declare_velocity_topic_name_cmd = DeclareLaunchArgument(
-        'velocity_topic_name', 
-        default_value="/nekomimi_bot/cmd_vel", 
-        description='Velocity Topic Name.')
+        'RCUTILS_LOGGING_BUFFERED_STREAM', '1'
+    )
 
     declare_namespace_cmd = DeclareLaunchArgument(
-        'namespace',
-        default_value='',
-        description='Top-level namespace')
+        'namespace', default_value='', description='Top-level namespace'
+    )
 
     declare_use_namespace_cmd = DeclareLaunchArgument(
         'use_namespace',
         default_value='false',
-        description='Whether to apply a namespace to the navigation stack')
-    
+        description='Whether to apply a namespace to the navigation stack',
+    )
+
     declare_slam_cmd = DeclareLaunchArgument(
-        'slam',
-        default_value='False',
-        description='Whether run a SLAM')
+        'slam', default_value='False', description='Whether run a SLAM'
+    )
+
+    declare_map_yaml_cmd = DeclareLaunchArgument(
+        'map',
+        default_value=map_file,
+        description='Full path to map yaml file to load'
+    )
+
+    declare_keepout_map_yaml_cmd = DeclareLaunchArgument(
+        'keepout_map',
+        default_value=keepout_map_file,
+        description='Full path to map yaml file to load for keepout filtered map'
+    )
+
+    declare_use_keepout_map_cmd = DeclareLaunchArgument(
+        'use_keepout_map',
+        default_value=str(use_keepoutmap),
+        description='Whether to use of keepout map',
+    )
+
+    declare_location_yaml_cmd = DeclareLaunchArgument(
+        'location',
+        default_value=location_file,
+        description='Full path to location yaml file to load on the map'
+    )
+
+    declare_use_localization_cmd = DeclareLaunchArgument(
+        'use_localization', default_value='True',
+        description='Whether to enable localization or not'
+    )
 
     declare_use_rviz_cmd = DeclareLaunchArgument(
         'use_rviz',
         default_value='True',
-        description='Whether to start RVIZ')
+        description='Use Visualization for ROS2 (Rviz2)',
+    )
+
+    declare_use_sim_time_cmd = DeclareLaunchArgument(
+        'use_sim_time',
+        default_value=str(use_gazebo),
+        description='Use simulation (Gazebo) clock if true',
+    )
 
     declare_autostart_cmd = DeclareLaunchArgument(
-        'autostart', default_value='true',
-        description='Automatically startup the nav2 stack')
+        'autostart',
+        default_value='true',
+        description='Automatically startup the nav2 stack',
+    )
 
     declare_use_composition_cmd = DeclareLaunchArgument(
-        'use_composition', default_value='False',
-        description='Use composed bringup if True')
-
-    declare_container_name_cmd = DeclareLaunchArgument(
-        'container_name', default_value='nav2_container',
-        description='the name of conatiner that nodes will load in if use composition')
+        'use_composition',
+        default_value='True',
+        description='Whether to use composed bringup',
+    )
 
     declare_use_respawn_cmd = DeclareLaunchArgument(
-        'use_respawn', default_value='False',
-        description='Whether to respawn if a node crashes. Applied when composition is disabled.')
+        'use_respawn',
+        default_value='False',
+        description='Whether to respawn if a node crashes. Applied when composition is disabled.',
+    )
 
     declare_log_level_cmd = DeclareLaunchArgument(
-        'log_level', default_value='info',
-        description='log level')
+        'log_level', default_value='info', description='log level'
+    )
 
+    declare_use_flex_nav_cmd = DeclareLaunchArgument(
+        'use_flex_nav', default_value=str(use_pantilt_move),
+        description='Whether to use pan-tilt movement in the navigate'
+    )
 
-    load_nodes = GroupAction(
-        condition=IfCondition(PythonExpression(['not ', use_composition])),
-        actions=[
+    declare_initial_x_cmd = DeclareLaunchArgument(
+        'initial_x',
+        default_value=str(float(start_x)),
+        description='initial point x on the map')
+
+    declare_initial_y_cmd = DeclareLaunchArgument(
+        'initial_y',
+        default_value=str(float(start_y)),
+        description='initial point y on the map')
+
+    declare_initial_yaw_cmd = DeclareLaunchArgument(
+        'initial_yaw',
+        default_value=str(float(start_yaw)),
+        description='initial rotation(yaw) on the map')
+
+    declare_velocity_topic_name_cmd = DeclareLaunchArgument(
+        'velocity_topic_name',
+        default_value='/nekomimi_bot/cmd_vel',
+        description='Topic name for the velocity command')
+
+    declare_custom_costmap_layer_cmd = DeclareLaunchArgument(
+        'custom_costmap_layer',
+        default_value=cost_map,
+        description='Custom Costmap Layer for Global and Local Costmap')
+
+    # Specify the actions
+    bringup_cmd_group = GroupAction(
+        [
+            PushROSNamespace(condition=IfCondition(use_namespace), namespace=namespace),
             Node(
-                package='nav2_controller',
-                executable='controller_server',
-                output='screen',
-                respawn=use_respawn,
-                respawn_delay=2.0,
-                parameters=[configured_params],
+                condition=IfCondition(use_composition),
+                name='nav2_container',
+                package='rclcpp_components',
+                executable='component_container_isolated',
+                parameters=[configured_params, {'autostart': autostart, 'keepout_filter.enabled': use_keepout_map, 'voxel_layer.observation_sources': custom_costmap_layer, 'obstacle_layer.observation_sources': custom_costmap_layer,}],
+                # parameters=[configured_params, {'autostart': autostart, 'keepout_filter.enabled': use_keepout_map,}],
                 arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings),
-            Node(
-                package='nav2_smoother',
-                executable='smoother_server',
-                name='smoother_server',
+                remappings=remappings,
                 output='screen',
-                respawn=use_respawn,
-                respawn_delay=2.0,
-                parameters=[configured_params],
-                arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings),
-            Node(
-                package='nav2_planner',
-                executable='planner_server',
-                name='planner_server',
-                output='screen',
-                respawn=use_respawn,
-                respawn_delay=2.0,
-                parameters=[configured_params],
-                arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings),
-            Node(
-                package='nav2_behaviors',
-                executable='behavior_server',
-                name='behavior_server',
-                output='screen',
-                respawn=use_respawn,
-                respawn_delay=2.0,
-                parameters=[configured_params],
-                arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings),
-            Node(
-                package='nav2_bt_navigator',
-                executable='bt_navigator',
-                name='bt_navigator',
-                output='screen',
-                respawn=use_respawn,
-                respawn_delay=2.0,
-                parameters=[configured_params],
-                arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings),
-            Node(
-                package='nav2_waypoint_follower',
-                executable='waypoint_follower',
-                name='waypoint_follower',
-                output='screen',
-                respawn=use_respawn,
-                respawn_delay=2.0,
-                parameters=[configured_params],
-                arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings),
-            Node(
-                package='nav2_velocity_smoother',
-                executable='velocity_smoother',
-                name='velocity_smoother',
-                output='screen',
-                respawn=use_respawn,
-                respawn_delay=2.0,
-                parameters=[configured_params],
-                arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings +
-                        [('cmd_vel_smoothed', velocity_topic_name)]),
-            Node(
-                condition=IfCondition(use_keepout_filter),
-                package='nav2_map_server',
-                executable='map_server',
-                name='keepout_filter_mask_server',
-                output='screen',
-                respawn=use_respawn,
-                respawn_delay=2.0,
-                parameters=[configured_params,
-                            {'use_sim_time': use_sim_time},
-                            {'yaml_filename': keepout_mask_yaml_file}],
-                arguments=['--ros-args', '--log-level', log_level],
             ),
-            Node(
-                condition=IfCondition(use_keepout_filter),
-                package='nav2_map_server',
-                executable='costmap_filter_info_server',
-                name='costmap_filter_info_server',
-                output='screen',
-                respawn=use_respawn,
-                respawn_delay=2.0,
-                parameters=[configured_params],
-                arguments=['--ros-args', '--log-level', log_level],
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    os.path.join(get_package_share_directory('nav2_bringup'), 'launch', 'slam_launch.py')
+                ),
+                condition=IfCondition(PythonExpression([slam, ' and ', use_localization])),
+                launch_arguments={
+                    'namespace': namespace,
+                    'use_sim_time': use_sim_time,
+                    'autostart': autostart,
+                    'use_respawn': use_respawn,
+                    'params_file': slamtool_param_file,
+                }.items(),
             ),
-            Node(
-                condition=IfCondition(use_keepout_filter),
-                package='nav2_lifecycle_manager',
-                executable='lifecycle_manager',
-                name='lifecycle_manager_navigation',
-                output='screen',
-                arguments=['--ros-args', '--log-level', log_level],
-                parameters=[{'use_sim_time': use_sim_time},
-                            {'autostart': autostart},
-                            {'node_names': lifecycle_nodes_with_filter}]),
-            Node(
-                condition=UnlessCondition(use_keepout_filter),
-                package='nav2_lifecycle_manager',
-                executable='lifecycle_manager',
-                name='lifecycle_manager_navigation',
-                output='screen',
-                arguments=['--ros-args', '--log-level', log_level],
-                parameters=[{'use_sim_time': use_sim_time},
-                            {'autostart': autostart},
-                            {'node_names': lifecycle_nodes}]),
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'launch', 'include', 'localization.launch.py')
+                ),
+                condition=IfCondition(PythonExpression(['not ', slam, ' and ', use_localization])),
+                launch_arguments={
+                    'namespace': namespace,
+                    'map': map_yaml_file,
+                    'initial_x': initial_x,
+                    'initial_y': initial_y,
+                    'initial_yaw': initial_yaw,
+                    'keepout_map': keepout_map_yaml_file,  # Customize
+                    'use_keepout_map': use_keepout_map,  # Customize
+                    'use_sim_time': use_sim_time,
+                    'autostart': autostart,
+                    'params_file': params_file,
+                    'use_composition': use_composition,
+                    'use_respawn': use_respawn,
+                    'container_name': 'nav2_container',
+                }.items(),
+            ),
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'launch', 'include', 'navigate_node.launch.py')
+                ),
+                launch_arguments={
+                    'namespace': namespace,
+                    'use_sim_time': use_sim_time,
+                    'autostart': autostart,
+                    'params_file': params_file,
+                    'use_composition': use_composition,
+                    'use_respawn': use_respawn,
+                    'use_keepout_map': use_keepout_map,  # Customize
+                    'velocity_topic_name': velocity_topic_name,  # Customize
+                    'container_name': 'nav2_container',
+                }.items(),
+            ),
         ]
     )
 
-    load_composable_nodes = LoadComposableNodes(
-        condition=IfCondition(use_composition),
-        target_container=container_name_full,
-        composable_node_descriptions=[
-            ComposableNode(
-                package='nav2_controller',
-                plugin='nav2_controller::ControllerServer',
-                name='controller_server',
-                parameters=[configured_params],
-                remappings=remappings),
-            ComposableNode(
-                package='nav2_smoother',
-                plugin='nav2_smoother::SmootherServer',
-                name='smoother_server',
-                parameters=[configured_params],
-                remappings=remappings),
-            ComposableNode(
-                package='nav2_planner',
-                plugin='nav2_planner::PlannerServer',
-                name='planner_server',
-                parameters=[configured_params],
-                remappings=remappings),
-            ComposableNode(
-                package='nav2_behaviors',
-                plugin='behavior_server::BehaviorServer',
-                name='behavior_server',
-                parameters=[configured_params],
-                remappings=remappings),
-            ComposableNode(
-                package='nav2_bt_navigator',
-                plugin='nav2_bt_navigator::BtNavigator',
-                name='bt_navigator',
-                parameters=[configured_params],
-                remappings=remappings),
-            ComposableNode(
-                package='nav2_waypoint_follower',
-                plugin='nav2_waypoint_follower::WaypointFollower',
-                name='waypoint_follower',
-                parameters=[configured_params],
-                remappings=remappings),
-            ComposableNode(
-                package='nav2_velocity_smoother',
-                plugin='nav2_velocity_smoother::VelocitySmoother',
-                name='velocity_smoother',
-                parameters=[configured_params],
-                remappings=remappings +
-                           [('cmd_vel_smoothed', velocity_topic_name)]),
-            ComposableNode(
-                package='nav2_map_server',
-                plugin='nav2_map_server::MapServer',
-                name='keepout_filter_mask_server',
-                parameters=[configured_params,
-                            {'use_sim_time': use_sim_time},
-                            {'yaml_filename': keepout_mask_yaml_file}]
-            ),
-            ComposableNode(
-                package='nav2_map_server',
-                plugin='nav2_map_server::CostmapFilterInfoServer',
-                name='costmap_filter_info_server',
-                parameters=[configured_params,
-                            {'use_sim_time': use_sim_time},]
-            ),
-            ComposableNode(
-                condition=IfCondition(use_keepout_filter),
-                package='nav2_lifecycle_manager',
-                plugin='nav2_lifecycle_manager::LifecycleManager',
-                name='lifecycle_manager_navigation',
-                parameters=[{'use_sim_time': use_sim_time,
-                             'autostart': autostart,
-                             'node_names': lifecycle_nodes_with_filter}]),
-            ComposableNode(
-                condition=UnlessCondition(use_keepout_filter),
-                package='nav2_lifecycle_manager',
-                plugin='nav2_lifecycle_manager::LifecycleManager',
-                name='lifecycle_manager_navigation',
-                parameters=[{'use_sim_time': use_sim_time,
-                             'autostart': autostart,
-                             'node_names': lifecycle_nodes}]),
-        ],
+
+    tf_broadcaster_cmd = Node(
+        package='nekomimi_bot_navigation',
+        executable='location_tf_broadcaster',
+        name='location_tf_broadcaster',
+        parameters=[{"location_file_path": location_yaml_file,}],
     )
 
-    # Specify the actions
-    bringup_cmd_group = GroupAction([
-        PushRosNamespace(
-            condition=IfCondition(use_namespace),
-            namespace=namespace),
-
-        Node(
-            condition=IfCondition(use_composition),
-            name='nav2_container',
-            package='rclcpp_components',
-            executable='component_container_isolated',
-            parameters=[configured_params, {'autostart': autostart}],
-            arguments=['--ros-args', '--log-level', log_level],
-            remappings=remappings,
-            output='screen'),
-
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('nav2_bringup'),
-                                                        "launch",
-                                                        "slam_launch.py")),
-            condition=IfCondition(slam),
-            launch_arguments={'namespace': namespace,
-                              'use_sim_time': use_sim_time,
-                              'autostart': autostart,
-                              'use_respawn': use_respawn,
-                              'params_file': slamtool_param_file}.items()),
-
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('nekomimi_bot_navigation'),
-                                                       "launch",
-                                                       "include",
-                                                       "localization.launch.py")),
-            condition=IfCondition(PythonExpression(['not ', slam])),
-            launch_arguments={'namespace': namespace,
-                              'map': map_yaml_file,
-                              'use_sim_time': use_sim_time,
-                              'autostart': autostart,
-                              'params_file': params_file,
-                              'use_composition': use_composition,
-                              'use_respawn': use_respawn,
-                              'container_name': 'nav2_container',
-                              'initial_x': initial_x,
-                              'initial_y': initial_y,
-                              'initial_yaw': initial_yaw,}.items()),
-    ])
+    flex_nav_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'launch', 'include', 'flex_nav.launch.py')
+        ),
+        condition=IfCondition(use_flex_nav),
+        launch_arguments={'use_sim_time': use_sim_time,}.items(),
+    )
 
     rviz_cmd = Node(
         package='rviz2',
         executable='rviz2',
         arguments=['-d', os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'rviz', 'navigation.rviz')],
         condition=IfCondition(use_rviz)
-    )
-
-    tf_broadcaster_cmd = Node(
-        package='nekomimi_bot_navigation',
-        executable='location_tf_broadcaster',
-        name='location_tf_broadcaster',
-        parameters=[{"location_file_path": location_file_path,}],
-    )
-
-    flex_nav_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 
-                                                   'launch', 'include', 'flex_nav.launch.py')),
-        condition=IfCondition(use_flex_nav),
     )
 
     # Create the launch description and populate
@@ -462,30 +337,28 @@ def generate_launch_description():
     ld.add_action(declare_use_namespace_cmd)
     ld.add_action(declare_slam_cmd)
     ld.add_action(declare_map_yaml_cmd)
-    ld.add_action(declare_keepout_map_yaml_cmd)
-    ld.add_action(declare_params_file_cmd)
-    ld.add_action(declare_slamtool_param_file_cmd)
-    ld.add_action(declare_velocity_topic_name_cmd)
-    ld.add_action(declare_use_sim_time_cmd)
+    ld.add_action(declare_keepout_map_yaml_cmd)  # Customize
+    ld.add_action(declare_use_keepout_map_cmd)  # Customize
+    ld.add_action(declare_location_yaml_cmd)  # Customize
     ld.add_action(declare_use_rviz_cmd)
-    ld.add_action(declare_initial_x_cmd)
-    ld.add_action(declare_initial_y_cmd)
-    ld.add_action(declare_use_keepout_filter_cmd)
-    ld.add_action(declare_initial_yaw_cmd)
-    ld.add_action(declare_location_yaml_cmd)
-    ld.add_action(rviz_cmd)
+    ld.add_action(declare_use_sim_time_cmd)
     ld.add_action(declare_autostart_cmd)
     ld.add_action(declare_use_composition_cmd)
-    ld.add_action(declare_container_name_cmd)
     ld.add_action(declare_use_respawn_cmd)
     ld.add_action(declare_log_level_cmd)
-    # Add the actions to launch all of the navigation nodes
-    ld.add_action(load_nodes)
-    ld.add_action(load_composable_nodes)
-    ld.add_action(bringup_cmd_group)
-    ld.add_action(tf_broadcaster_cmd)
+    ld.add_action(declare_use_localization_cmd)
+    ld.add_action(declare_use_flex_nav_cmd)  # Customize
+    ld.add_action(declare_initial_x_cmd)  # Customize
+    ld.add_action(declare_initial_y_cmd)  # Customize
+    ld.add_action(declare_initial_yaw_cmd)  # Customize
+    ld.add_action(declare_velocity_topic_name_cmd)  # Customize
+    ld.add_action(declare_custom_costmap_layer_cmd)  # Customize
 
-    ld.add_action(declare_flex_nav_cmd)
-    ld.add_action(flex_nav_launch)
+
+    # Add the actions to launch all of the navigation nodes
+    ld.add_action(bringup_cmd_group)
+    ld.add_action(tf_broadcaster_cmd)  # Customize
+    ld.add_action(flex_nav_cmd)  # Customize
+    ld.add_action(rviz_cmd)  # Customize
 
     return ld
