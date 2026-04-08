@@ -30,20 +30,56 @@ for ((i = 0; i < ${#ros_packages[@]}; i++)) {
     fi
 }
 
-# Additional packages for navigation of TeamSOBITS repository
-if ros2 pkg list 2>/dev/null | grep -q "^flex_nav$"; then
-    echo "flex_nav is exist. Skipping cloning and installation."
-else
-    echo "Clonning: flex_nav"
-    git clone -b $ROS_DISTRO-devel https://github.com/TeamSOBITS/flex_nav.git
-fi
 
-if ros2 pkg list 2>/dev/null | grep -q "^explore_lite$"; then
-    echo "explore_ros2 is exist. Skipping cloning and installation."
-else
-    echo "Clonning: explore_ros2"
-    git clone -b $ROS_DISTRO-devel https://github.com/TeamSOBITS/explore_ros2.git
-fi
+# Additional packages for navigation of TeamSOBITS repository
+sobits_packages=(
+    "flex_nav"
+    "explore_ros2"
+    "sobits_tts"
+)
+check_packages=(
+    "flex_nav"
+    "explore_lite"
+    "sobits_tts"
+)
+
+# clone packages from TeamSOBITS (if not exist)
+for ((i = 0; i < ${#sobits_packages[@]}; i++)) {
+    if ros2 pkg list 2>/dev/null | grep -q "^${check_packages[i]}$"; then
+        echo "${check_packages[i]} is exist. Skipping cloning and installation."
+    else
+        echo "Clonning: ${sobits_packages[i]}"
+        git clone -b $ROS_DISTRO-devel https://github.com/TeamSOBITS/${sobits_packages[i]}.git
+}
+
+# Install TTS packages for OpenPico
+cd sobits_tts/install/
+bash openpico.sh
+cd ../..
+
+
+# Install STT packages for Vosk
+cd sobits_speech_recognition/install/
+bash vosk.sh
+
+MODEL_NAME="vosk-model-ja-0.22"
+BASE_URL="https://alphacephei.com/vosk/models"
+INSTALL_DIR="$HOME/.sobits_speech_recognition/vosk_models"
+
+URL="${BASE_URL}/${MODEL_NAME}.zip"
+
+echo "Model: $MODEL_NAME"
+echo "Install dir: $INSTALL_DIR"
+
+mkdir -p "$INSTALL_DIR"
+cd "$INSTALL_DIR"
+
+wget "$URL"
+unzip "${MODEL_NAME}.zip"
+rm "${MODEL_NAME}.zip"
+
+cd ../..
+
 
 # Go back to previous directory
 cd ${DIR}

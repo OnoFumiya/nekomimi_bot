@@ -168,19 +168,19 @@ def launch_gz(context, *args, **kwargs):
         output="screen",
     )
 
-    # library_server_launch = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource([
-    #         PathJoinSubstitution([
-    #             FindPackageShare('nekomimi_bot_library'),
-    #             'launch',
-    #             'library_server.launch.py'
-    #         ])
-    #     ]),
-    #     launch_arguments={
-    #         'robot_name': robot_name,
-    #         'enable_gz' : enable_gz,
-    #     }.items(),
-    # )
+    library_server_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('nekomimi_bot_library'),
+                'launch',
+                'library_server.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'robot_name': robot_name,
+            'enable_gz': enable_gz,
+        }.items(),
+    )
 
     move_base_node = Node(
         package="nekomimi_bot_bringup",
@@ -239,12 +239,12 @@ def launch_gz(context, *args, **kwargs):
                     on_exit=[move_base_node],
                 )
             ),
-            # RegisterEventHandler(
-            #     event_handler=OnProcessExit(
-            #         target_action=joint_state_broadcaster,
-            #         on_exit=[library_server_launch],
-            #     )
-            # ),
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=joint_state_broadcaster,
+                    on_exit=[library_server_launch],
+                )
+            ),
         ]
 
     else:
@@ -281,11 +281,11 @@ def launch_gz(context, *args, **kwargs):
                     on_exit=[move_base_node],
                 )
             ),
-            # RegisterEventHandler(
-            #     event_handler=OnProcessExit(
-            #         target_action=joint_state_broadcaster,
-            #         on_exit=[library_server_launch],
-            #     )
-            # ),
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=joint_state_broadcaster,
+                    on_exit=[library_server_launch],
+                )
+            ),
             robot_state_publisher_node,
         ]
