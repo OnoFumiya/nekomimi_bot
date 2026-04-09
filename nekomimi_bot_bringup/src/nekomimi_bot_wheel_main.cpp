@@ -143,4 +143,4 @@ void NekomimiBotWheelController::control_callback() {
     nekomimi_bot_wheel_odometry_->prev_drive_pos[i] = nekomimi_bot_wheel_odometry_->current_drive_pos[i];
 }
 
-} // namespace sobit_pro
+} // namespace nekomimi_bot
