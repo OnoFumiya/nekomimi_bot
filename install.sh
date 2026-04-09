@@ -50,6 +50,7 @@ for ((i = 0; i < ${#sobits_packages[@]}; i++)) {
     else
         echo "Clonning: ${sobits_packages[i]}"
         git clone -b $ROS_DISTRO-devel https://github.com/TeamSOBITS/${sobits_packages[i]}.git
+    fi
 }
 
 # Install TTS packages for OpenPico
