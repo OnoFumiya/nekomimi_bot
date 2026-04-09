@@ -36,11 +36,13 @@ sobits_packages=(
     "flex_nav"
     "explore_ros2"
     "sobits_tts"
+    "sobits_speech_recognition"
 )
 check_packages=(
     "flex_nav"
     "explore_lite"
     "sobits_tts"
+    "sobits_speech_recognition"
 )
 
 # clone packages from TeamSOBITS (if not exist)
@@ -50,6 +52,14 @@ for ((i = 0; i < ${#sobits_packages[@]}; i++)) {
     else
         echo "Clonning: ${sobits_packages[i]}"
         git clone -b $ROS_DISTRO-devel https://github.com/TeamSOBITS/${sobits_packages[i]}.git
+
+        # Check if install.sh exists in each package
+        if [ -f ${sobits_packages[i]}/install.sh ]; then
+            echo "Running install.sh in ${sobits_packages[i]}."
+            cd ${sobits_packages[i]}
+            bash install.sh
+            cd ..
+        fi
     fi
 }
 
