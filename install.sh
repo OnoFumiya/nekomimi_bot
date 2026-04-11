@@ -63,37 +63,11 @@ for ((i = 0; i < ${#sobits_packages[@]}; i++)) {
     fi
 }
 
-# Install TTS packages for OpenPico
-cd sobits_tts/install/
-bash openpico.sh
-cd ../..
-
-
-# Install STT packages for Vosk
-cd sobits_speech_recognition/install/
-bash vosk.sh
-
-MODEL_NAME="vosk-model-ja-0.22"
-BASE_URL="https://alphacephei.com/vosk/models"
-INSTALL_DIR="$HOME/.sobits_speech_recognition/vosk_models"
-
-URL="${BASE_URL}/${MODEL_NAME}.zip"
-
-echo "Model: $MODEL_NAME"
-echo "Install dir: $INSTALL_DIR"
-
-mkdir -p "$INSTALL_DIR"
-cd "$INSTALL_DIR"
-
-wget "$URL"
-unzip "${MODEL_NAME}.zip"
-rm "${MODEL_NAME}.zip"
-
-cd ../..
-
-
 # Go back to previous directory
 cd ${DIR}
+
+# Install audio packages
+bash audio.sh
 
 # Download required dependencies
 python3 -m pip install --break-system-packages \
