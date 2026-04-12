@@ -11,6 +11,10 @@ cd ../sobits_tts/install/
 bash openpico.sh
 cd ../..
 
+cd sobits_speech_recognition/install/
+bash sherpa.sh
+cd ../..
+
 MODEL_NAME="sherpa-onnx-nemo-parakeet-tdt_ctc-0.6b-ja-35000-int8"
 BASE_URL="https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models"
 INSTALL_DIR="$HOME/.sobits_speech_recognition/sherpa_models"
