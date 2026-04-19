@@ -4,9 +4,8 @@ import struct
 
 # --- 通信設定 ---
 # お使いの環境に合わせてCOMポート名を変更してください (例: Windows: 'COM3', Linux: '/dev/ttyUSB0')
-SERIAL_PORT = '/dev/ttyUSB0' 
+SERIAL_PORT = '/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0' 
 BAUD_RATE = 1000000 # STS/SCSシリーズのデフォルト通信速度
-SERVO_ID = 21 # 制御したいサーボのID
 
 # --- コマンド定数 ---
 # コマンド長: 9バイト (Instruction:1 + Address:1 + Position:2 + Time:2 + Speed:2)
@@ -107,6 +106,65 @@ def torque_enable(ser, servo_id=1, enable=True):
     ser.write(bytearray(packet))
 
 
+def read_position(ser, servo_id):
+    address = 0x38  # SMS_STS_PRESENT_POSITION_L
+    size = 2        # 2byte (word)
+
+    # パケット生成
+    packet = [
+        0xFF, 0xFF,
+        servo_id,
+        0x04,       # length
+        0x02,       # READ
+        address,
+        size
+    ]
+    checksum = (~sum(packet[2:]) & 0xFF)
+    packet.append(checksum)
+
+    # 送信前にゴミを消す
+    ser.reset_input_buffer()
+
+    # 送信
+    ser.write(bytearray(packet))
+
+    # 応答待ち
+    time.sleep(0.02)
+
+    # 受信（ステータスパケットはだいたい8バイト）
+    res = ser.read(8)
+
+    if len(res) < 8:
+        print("No response or too short")
+        return None
+
+    # ヘッダ確認
+    if res[0] != 0xFF or res[1] != 0xFF:
+        print("Invalid header:", res.hex())
+        return None
+
+    # IDチェック
+    if res[2] != servo_id:
+        print("ID mismatch:", res.hex())
+        return None
+
+    # チェックサム確認
+    calc_checksum = (~sum(res[2:7]) & 0xFF)
+    if calc_checksum != res[7]:
+        print("Checksum error:", res.hex())
+        return None
+
+    # データ取り出し（little endian）
+    pos = res[5] | (res[6] << 8)
+
+    # 符号付き変換（C++の encode_signed_value 相当）
+    if pos > 32767:
+        pos -= 65536
+
+    print(f"ID {servo_id} position: {pos}")
+    return pos
+
+
 # --- メイン処理 ---
 if __name__ == '__main__':
     try:
@@ -118,37 +176,24 @@ if __name__ == '__main__':
             write_timeout=0.1
         )
 
-        # torque_enable(ser, SERVO_ID, False)
+        # torque_enable(ser, 21, False)
         # time.sleep(2.0)
-        # torque_enable(ser, SERVO_ID, True)
+        # torque_enable(ser, 21, True)
         # time.sleep(2.0)
 
         print(f"Serial port {SERIAL_PORT} opened successfully at {BAUD_RATE} bps.")
 
         # --- 制御の実行 ---
 
-        # 1. 初期位置 (例えば、0度 / Position 0) に移動
-        # (Position 0, Speed 500)
-        print("Moving to initial position (0 degrees / Position 0)...")
-        move_servo(ser, 21, 2048, 0)
-        time.sleep(1)
-        # move_servo(ser, 11, 0, 1500)
-        # move_servo(ser, 12, 0, 1500)
-        # time.sleep(5) # 動作完了を待つ
+        for i in [21, 31, 32, 11, 12]:
+            # print(f"Moving servo ID {i} to position 2048 with speed 0 (full speed)...")
+            torque_enable(ser, i, True)
+            # move_servo(ser, i, 2048, 500)
+            # # time.sleep(0.02)
+            read_position(ser, i)
+            # torque_enable(ser, i, False)
+            time.sleep(1)
 
-        # # 2. 中間位置 (例えば、180度 / Position 2048) に移動
-        # # (Position 2048, Speed 1000)
-        # print("Moving to 180 degrees (Position 2048)...")
-        # move_servo(ser, SERVO_ID, 2048, 1000)
-        # time.sleep(10)
-
-        # 3. 終了位置 (例えば、360度 / Position 4095) に移動
-        # (Position 4095, Speed 500)
-        # print("Moving to 360 degrees (Position 4095)...")
-        # # move_servo(ser, SERVO_ID, 1024, 512)
-        # move_servo(ser, 11, 0, 0)
-        # move_servo(ser, 12, 0, 0)
-        # time.sleep(10)
 
         print("Position control sequence finished.")
 
