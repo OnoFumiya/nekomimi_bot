@@ -548,8 +548,8 @@ head_controller_node:
     head_trajectory_topic: "/nekomimi_bot/joint_trajectory_controller/joint_trajectory"
     head_pan_joint_name: "head_pan_joint"
     head_tilt_joint_name: "head_tilt_joint"
-    max_pan_limit: 0.78
-    min_pan_limit: -0.78
+    max_pan_limit: 2.618 # 150 degrees in radians
+    min_pan_limit: -0.524 # -30 degrees in radians
     max_tilt_limit: 1.0
     min_tilt_limit: -1.571
     tilt_angle_navigating: 0.7
