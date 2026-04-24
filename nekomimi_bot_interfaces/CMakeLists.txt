@@ -7,12 +7,16 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
 
-install(DIRECTORY
-  msg
-  srv
-  action
-  DESTINATION share/${PROJECT_NAME}
+rosidl_generate_interfaces(${PROJECT_NAME}
+  action/MoveJoint.action
+  action/MoveToPose.action
+  action/MoveWheelLinear.action
+  action/MoveWheelRotate.action
+  DEPENDENCIES std_msgs geometry_msgs
 )
 
 if(BUILD_TESTING)
