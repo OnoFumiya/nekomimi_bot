@@ -120,7 +120,6 @@ def launch_gz(context, *args, **kwargs):
                 ])
             ]),
             launch_arguments={
-                'camera_name': robot_name,
                 'camera_namespace': robot_name,
                 'tf_prefix' : robot_name + "/",
             }.items(),
