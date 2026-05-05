@@ -5,21 +5,21 @@
   <xacro:macro name="camera" params="parent">
 
     <joint name="realsense_d405" type="fixed">
-      <origin xyz="-0.00982012 0.0 0.0305" rpy="0.0 0.0 0.0" />
+      <origin xyz="0.01317988 0.009 0.0515" rpy="0.0 0.0 0.0" />
       <parent link="${parent}_link" />
-      <child link="realsense_link" />
+      <child link="head_camera_link" />
     </joint>
 
-    <link name="realsense_link">
+    <link name="head_camera_link">
       <visual>
-        <origin xyz="0.02293 0.0 0.021" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <origin xyz="-0.00007 -0.009 ${0.021-0.021}" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
         <geometry>
           <mesh filename="file://$(find nekomimi_bot_description)/meshes/sensor/realsense_d405.stl" scale="0.001 0.001 0.001" />
         </geometry>
         <material name="grey" />
       </visual>
       <collision>
-        <origin xyz="0.0135 0.0 0.0245" rpy="0.0 0.0 0.0" />
+        <origin xyz="-0.0095 -0.009 0.0035" rpy="0.0 0.0 0.0" />
         <geometry>
           <box size="0.027 0.049 0.049" />
         </geometry>

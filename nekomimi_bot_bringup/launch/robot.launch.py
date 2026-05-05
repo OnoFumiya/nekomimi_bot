@@ -111,6 +111,21 @@ def launch_gz(context, *args, **kwargs):
             }.items(),
         )
 
+        realsense_node = IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([
+                PathJoinSubstitution([
+                    FindPackageShare('nekomimi_bot_bringup'),
+                    'launch',
+                    'rs.launch.py'
+                ])
+            ]),
+            launch_arguments={
+                'camera_name': robot_name,
+                'camera_namespace': robot_name,
+                'tf_prefix' : robot_name + "/",
+            }.items(),
+        )
+
     joint_state_broadcaster = Node(
         package='controller_manager',
         executable='spawner',
@@ -233,6 +248,7 @@ def launch_gz(context, *args, **kwargs):
             velocity_controller,
             robot_state_publisher_node,
             lidar_node,
+            realsense_node,
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=joint_state_broadcaster,
