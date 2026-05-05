@@ -3,9 +3,7 @@
 namespace nekomimi_bot{
 
 JointActionServer::JointActionServer(const rclcpp::NodeOptions & options = rclcpp::NodeOptions())
-: Node("joint_action_server", options),
-  tf_buffer_(std::make_shared<tf2_ros::Buffer>(this->get_clock())),
-  tf_listener_(std::make_shared<tf2_ros::TransformListener>(*tf_buffer_))
+: Node("joint_action_server", options)
 {
   // Configure the QoS profile
   rclcpp::QoS qos_profile(1); // depth = 1
@@ -13,7 +11,6 @@ JointActionServer::JointActionServer(const rclcpp::NodeOptions & options = rclcp
   qos_profile.reliability(RMW_QOS_POLICY_RELIABILITY_RELIABLE);
   qos_profile.history(RMW_QOS_POLICY_HISTORY_KEEP_LAST);
   qos_profile.durability(RMW_QOS_POLICY_DURABILITY_VOLATILE);
-
 
   this->action_server_move_joints_ = rclcpp_action::create_server<MoveJoint>(
       this,
@@ -27,18 +24,11 @@ JointActionServer::JointActionServer(const rclcpp::NodeOptions & options = rclcp
       std::bind(&JointActionServer::handle_move_to_pose_goal, this, std::placeholders::_1, std::placeholders::_2),
       std::bind(&JointActionServer::handle_move_to_pose_cancel, this, std::placeholders::_1),
       std::bind(&JointActionServer::handle_move_to_pose_accepted, this, std::placeholders::_1));
-  this->service_server_get_hand_to_coord_ = this->create_service<GetHandToTargetCoord>(
-      "get_hand_to_coord",
-      std::bind(&JointActionServer::serve_get_hand_to_coord, this, std::placeholders::_1, std::placeholders::_2));
-  this->service_server_get_hand_to_tf_ = this->create_service<GetHandToTargetTF>(
-      "get_hand_to_tf",
-      std::bind(&JointActionServer::serve_get_hand_to_tf, this, std::placeholders::_1, std::placeholders::_2));
 
   this->sub_joint_state_ = this->create_subscription<sensor_msgs::msg::JointState>(
       "joint_states", qos_profile, std::bind(&JointActionServer::joint_state_callback, this, std::placeholders::_1));
   this->pub_head_joint_control_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>(
-      "joint_trajectory_controller/joint_trajectory", qos_profile);
-
+      "head_position_controller/joint_trajectory", qos_profile);
 
   //Declare the pose parameters
 
@@ -150,7 +140,7 @@ void JointActionServer::exe_move_joints(
   // Check if the joint names are valid
   for (size_t i = 0; i < goal->target_joint_names.size(); i++) {
     if (std::find(JointNames.begin(), JointNames.end(), goal->target_joint_names[i]) == JointNames.end() &&
-        std::find(JointNamesHand.begin(), JointNamesHand.end(), goal->target_joint_names[i]) == JointNamesHand.end()) {
+        std::find(JointNamesHead.begin(), JointNamesHead.end(), goal->target_joint_names[i]) == JointNamesHead.end()) {
       RCLCPP_ERROR(this->get_logger(), "The joint name does not exist: %s", goal->target_joint_names[i].c_str());
       result->success = false;
       result->message = "The joint name does not exist: " + goal->target_joint_names[i];
@@ -193,11 +183,10 @@ void JointActionServer::exe_move_joints(
       result->total_elapsed_time.nanosec = (this->now() - start_time).nanoseconds() % int(10E9);
       goal_handle->canceled(result);
 
-      // TODO: Stop of current joint...
-      // builtin_interfaces::msg::Duration dt;
-      // dt.sec = 0;
-      // dt.nanosec = static_cast<uint32_t>(0.1 * 10E9);
-      // this->pub_joint_control_->publish(set_joints({}, {}, dt));
+      builtin_interfaces::msg::Duration dt;
+      dt.sec = 0;
+      dt.nanosec = static_cast<uint32_t>(0.1 * 10E9);
+      this->pub_head_joint_control_->publish(set_joints(goal->target_joint_names, {}, dt, "head"));
 
       return;
     }
@@ -205,7 +194,7 @@ void JointActionServer::exe_move_joints(
     auto feedback = std::make_shared<MoveJoint::Feedback>();
     feedback->current_joint_names = goal->target_joint_names;
     for (const auto &joint_name : goal->target_joint_names) {
-      feedback->current_joint_rad.push_back(this->curt_joint_state_[joint_name]);
+      feedback->current_joint_rad.push_back(curt_joint_state_[joint_name]);
     }
     feedback->move_time.sec = (this->now() - start_time).seconds();
     feedback->move_time.nanosec = (this->now() - start_time).nanoseconds() % int(10E9);
@@ -217,7 +206,7 @@ void JointActionServer::exe_move_joints(
   // Check if goal was reached
   for (size_t i = 0; i < goal->target_joint_names.size(); i++) {
     // TODO: set tolerance with parameter or msg
-    if (std::abs(this->curt_joint_state_[goal->target_joint_names[i]] - goal->target_joint_rad[i]) > 0.1) {
+    if (std::abs(curt_joint_state_[goal->target_joint_names[i]] - goal->target_joint_rad[i]) > 0.1) {
       RCLCPP_ERROR(this->get_logger(), "Failed to reach the goal");
 
       result->success = false;
@@ -281,9 +270,6 @@ void JointActionServer::exe_move_to_pose(
     goal_handle->abort(result);
   }
 
-  initial_joint_state_ = curt_joint_state_;
-
-
   // Publish the joint trajectory
   trajectory_msgs::msg::JointTrajectory head_joint_trajectory;
   head_joint_trajectory = set_joints(JointNames, target_joint_rad, goal->time_allowance, "head");
@@ -316,20 +302,19 @@ void JointActionServer::exe_move_to_pose(
       result->total_elapsed_time.nanosec = (this->now() - start_time).nanoseconds() % int(10E9);
       goal_handle->canceled(result);
 
-      // TODO: Stop of current joint...
-      // builtin_interfaces::msg::Duration dt;
-      // dt.sec = 0;
-      // dt.nanosec = static_cast<uint32_t>(0.1 * 10E9);
-      // this->pub_joint_control_->publish(set_joints({}, {}, dt));
+      builtin_interfaces::msg::Duration dt;
+      dt.sec = 0;
+      dt.nanosec = static_cast<uint32_t>(0.1 * 10E9);
+      this->pub_head_joint_control_->publish(set_joints(JointNames, {}, dt, "head"));
   
       return;
     }
 
     auto feedback = std::make_shared<MoveToPose::Feedback>();
     feedback->current_joint_names = JointNames;
-    for (const auto &joint_name : JointNames) {
-      feedback->current_joint_rad.push_back(this->curt_joint_state_[joint_name]);
-    }
+    for (const auto &joint_name : JointNames)
+      feedback->current_joint_rad.push_back(curt_joint_state_[joint_name]);
+
     feedback->move_time.sec = (this->now() - start_time).seconds();
     feedback->move_time.nanosec = (this->now() - start_time).nanoseconds() % int(10E9);
 
@@ -338,36 +323,18 @@ void JointActionServer::exe_move_to_pose(
 
   // Check if goal was reached
   for (size_t i = 0; i < JointNames.size(); i++) {
-    // TODO: set tolerance with parameter or msg
-      double diff = std::abs(this->curt_joint_state_[JointNames[i]] - target_joint_rad[i]);
-      double moved = std::abs(this->curt_joint_state_[JointNames[i]] - initial_joint_state_[JointNames[i]]);
+    // double diff = std::abs(curt_joint_state_[JointNames[i]] - target_joint_rad[i]);
+    // if (diff < 0.1 && !(std::find(JointNames.begin(), JointNames.end(), target_joint_names[i]) == JointNames.end())) {
+    //   continue;
+    // }
 
-      if (diff > 0.1) {
-        if (moved < 0.01) {
-          RCLCPP_ERROR(this->get_logger(),
-            "Joint %s did not move! initial=%.3f, target=%.3f, final=%.3f",
-            JointNames[i].c_str(),
-            initial_joint_state_[JointNames[i]],
-            target_joint_rad[i],
-            this->curt_joint_state_[JointNames[i]]);
-        } else {
-          RCLCPP_ERROR(this->get_logger(),
-            "Joint %s failed to reach target. moved=%.3f, target=%.3f, final=%.3f, diff=%.3f",
-            JointNames[i].c_str(),
-            moved,
-            target_joint_rad[i],
-            this->curt_joint_state_[JointNames[i]],
-            diff);
-        }
+    // result->success = false;
+    // result->message = "[FAIL] Failed to reach the goal";
+    // result->total_elapsed_time.sec = (this->now() - start_time).seconds();
+    // result->total_elapsed_time.nanosec = (this->now() - start_time).nanoseconds() % int(10E9);
+    // goal_handle->abort(result);
 
-      result->success = false;
-      result->message = "[FAIL] Failed to reach the goal";
-      result->total_elapsed_time.sec = (this->now() - start_time).seconds();
-      result->total_elapsed_time.nanosec = (this->now() - start_time).nanoseconds() % int(10E9);
-      goal_handle->abort(result);
-
-      return;
-    }
+    // return;
   }
 
   // Clear the current joint state
@@ -386,7 +353,7 @@ void JointActionServer::joint_state_callback(
   const sensor_msgs::msg::JointState::SharedPtr msg)
 {
   for (size_t i = 0; i < msg->name.size(); i++)
-    this->curt_joint_state_[msg->name[i]] = msg->position[i];
+    curt_joint_state_[msg->name[i]] = msg->position[i];
 
 }
 
@@ -406,8 +373,13 @@ trajectory_msgs::msg::JointTrajectory JointActionServer::set_joints(
       continue;
     }
 
-    joint_trajectory.joint_names.push_back(target_joint_names[i]);
-    point.positions.push_back(target_joint_rad[i]);
+    if (target_joint_rad.size() == 0) {
+      joint_trajectory.joint_names.push_back(target_joint_names[i]);
+      point.positions.push_back(curt_joint_state_[target_joint_names[i]]);
+    } else {
+      joint_trajectory.joint_names.push_back(target_joint_names[i]);
+      point.positions.push_back(target_joint_rad[i]);
+    }
   }
 
   joint_trajectory.points.push_back(point);

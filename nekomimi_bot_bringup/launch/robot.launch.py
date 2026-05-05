@@ -136,13 +136,13 @@ def launch_gz(context, *args, **kwargs):
         ],
     )
 
-    joint_trajectory_controller = Node(
+    head_position_controller = Node(
         package='controller_manager',
         executable='spawner',
-        # name='joint_trajectory_controller',
+        # name='head_position_controller',
         namespace=robot_name,
         arguments=[
-            'joint_trajectory_controller',
+            'head_position_controller',
             '-c', 'controller_manager', '--activate'
         ],
     )
@@ -242,7 +242,7 @@ def launch_gz(context, *args, **kwargs):
         return [
             controller_manager,
             joint_state_broadcaster,
-            joint_trajectory_controller,
+            head_position_controller,
             mobile_base_position_controller,
             velocity_controller,
             robot_state_publisher_node,
@@ -275,7 +275,7 @@ def launch_gz(context, *args, **kwargs):
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=joint_state_broadcaster,
-                    on_exit=[joint_trajectory_controller],
+                    on_exit=[head_position_controller],
                 )
             ),
             RegisterEventHandler(

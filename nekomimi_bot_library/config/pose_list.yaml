@@ -1,0 +1,13 @@
+/**:
+  ros__parameters:
+    poses:
+      - initial_pose
+      - detecting_pose
+
+    initial_pose:
+      head_pan  : 0.00
+      head_tilt : 0.00
+
+    detecting_pose:
+      head_pan  : 0.00
+      head_tilt : 0.40

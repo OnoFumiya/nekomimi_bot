@@ -2,7 +2,7 @@
   ros__parameters:
     update_rate: 10  # Hz
 
-    joint_trajectory_controller:
+    head_position_controller:
       type: joint_trajectory_controller/JointTrajectoryController
 
     mobile_base_position_controller:
@@ -15,7 +15,7 @@
       type: joint_state_broadcaster/JointStateBroadcaster
 
 
-/**/joint_trajectory_controller:
+/**/head_position_controller:
   ros__parameters:
     joints:
       - head_pan_joint
