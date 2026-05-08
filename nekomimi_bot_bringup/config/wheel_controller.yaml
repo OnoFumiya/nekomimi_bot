@@ -5,11 +5,11 @@
 
     twist_topic: cmd_vel
 
-    position_controller_name: mobile_base_position_controller
-    velocity_controller_name: velocity_controller
+    rotate_controller_name: mobile_base_position_controller
+    wheel_controller_name: velocity_controller
 
-    body_roll_max_vel: 1.57
-    drive_max_vel: 3.14
+    body_roll_max_vel: 5.0
+    drive_max_vel: 4.71
     wheel_radius: 0.025
     wheel_distance: 0.15
 
@@ -21,6 +21,6 @@
       - left_wheel_joint
       - right_wheel_joint
 
-    body_roll_small_range: true
+    body_roll_range: 5.0 # 3.14(+/-1.57) for small range, infinity(body_roll_range<0) for full range.
 
-    driving_status_threshold: 0.2
+    driving_status_threshold: 0.1

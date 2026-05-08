@@ -7,8 +7,8 @@ NekomimiBotWheelController::NekomimiBotWheelController(const rclcpp::NodeOptions
   // declare_parameter for each parameter
   this->declare_parameter("robot_base_frame", "base_footprint");
   this->declare_parameter("twist_topic", "cmd_vel");
-  this->declare_parameter("position_controller_name", "position_controller");
-  this->declare_parameter("velocity_controller_name", "velocity_controller");
+  this->declare_parameter("rotate_controller_name", "rotate_controller");
+  this->declare_parameter("wheel_controller_name", "wheel_controller");
   this->declare_parameter("body_roll_max_vel", (2.*M_PI));
   this->declare_parameter("drive_max_vel", M_PI);
   this->declare_parameter("wheel_radius", 0.05);
@@ -16,7 +16,7 @@ NekomimiBotWheelController::NekomimiBotWheelController(const rclcpp::NodeOptions
   this->declare_parameter("cycle_fequency", 10);
   this->declare_parameter("body_roll_joint", "body_roll_joint");
   this->declare_parameter("drive_joints", std::vector<std::string>({"wheel_drive_l_joint", "wheel_drive_r_joint"}));
-  this->declare_parameter("body_roll_small_range", true); // true: [-π/2, π/2], false: [-π, π]
+  this->declare_parameter("body_roll_range", -1.);
   this->declare_parameter("driving_status_threshold", 0.26);
 
 
@@ -43,16 +43,17 @@ NekomimiBotWheelController::NekomimiBotWheelController(const rclcpp::NodeOptions
 
   pub_odometry_ = this->create_publisher<nav_msgs::msg::Odometry>(
       "odom", qos_profile);
-  pub_body_roll_joint_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(
-      this->get_parameter("position_controller_name").as_string() + "/commands", qos_profile);
+  pub_body_roll_vel_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(
+      this->get_parameter("rotate_controller_name").as_string() + "/commands", qos_profile);
   pub_wheel_vel_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(
-      this->get_parameter("velocity_controller_name").as_string() + "/commands", qos_profile);
+      this->get_parameter("wheel_controller_name").as_string() + "/commands", qos_profile);
 
   // Set the initial position of the wheel
   joints_pos.clear();
   while (joints_pos.empty()) rclcpp::spin_some(this->get_node_base_interface());
 
-  nekomimi_bot_wheel_odometry_->prev_body_roll_pos = nekomimi_bot_wheel_control_->current_body_roll_pos = nekomimi_bot_wheel_odometry_->current_body_roll_pos = nekomimi_bot_wheel_control_->goal_body_roll_pos = joints_pos[body_roll_joint_name];
+  nekomimi_bot_wheel_control_->goal_body_roll_vel = 0.;
+  nekomimi_bot_wheel_odometry_->prev_body_roll_pos = nekomimi_bot_wheel_control_->current_body_roll_pos = nekomimi_bot_wheel_odometry_->current_body_roll_pos = joints_pos[body_roll_joint_name];
   for (int i=0; i<2; i++) {
     nekomimi_bot_wheel_control_->goal_drive_vel[i] = 0.;
     nekomimi_bot_wheel_odometry_->prev_drive_pos[i] = nekomimi_bot_wheel_odometry_->current_drive_pos[i] = joints_pos[drive_joints_names[i]];
@@ -115,17 +116,17 @@ void NekomimiBotWheelController::control_callback() {
   nekomimi_bot_wheel_control_->current_body_roll_pos = nekomimi_bot_wheel_odometry_->current_body_roll_pos = joints_pos[body_roll_joint_name];
   for (int i=0; i<2; i++) nekomimi_bot_wheel_odometry_->current_drive_pos[i] = joints_pos[drive_joints_names[i]];
 
-  // Set Body Roll [rad]
-  body_roll_joint_pos.data.clear();
-  body_roll_joint_pos.data.push_back(nekomimi_bot_wheel_control_->goal_body_roll_pos);
+  // Set Body Roll [rad/s]
+  body_roll_joint_vel.data.clear();
+  body_roll_joint_vel.data.push_back(nekomimi_bot_wheel_control_->goal_body_roll_vel);
 
   // Set Wheels Vellocity
   wheel_joint_vel.data.clear();
   for (int i=0; i<2; i++)
     wheel_joint_vel.data.push_back(nekomimi_bot_wheel_control_->goal_drive_vel[i]);
 
-  // Publish Float64MultiArray of Body Roll [rad]
-  pub_body_roll_joint_->publish(body_roll_joint_pos);
+  // Publish Float64MultiArray of Body Roll [rad/s]
+  pub_body_roll_vel_->publish(body_roll_joint_vel);
 
   // Publish Float64MultiArray of Wheels [rad/s]
   pub_wheel_vel_->publish(wheel_joint_vel);
