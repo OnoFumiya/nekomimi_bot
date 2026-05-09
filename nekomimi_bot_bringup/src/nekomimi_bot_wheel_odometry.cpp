@@ -21,20 +21,20 @@ void NekomimiBotWheelOdometry::update_odom()
 
   if ((0 < (distance_m[0] * distance_m[1])) && (fabsf(distance_m[0] - distance_m[1]) < 0.001)) {   // Translational motion
     result_odom.pose.pose.position.x = odom_.pose.pose.position.x + 
-        distance_m[0] * cos(base_rad);
+        distance_m[0] * cos((current_body_roll_pos + prev_body_roll_pos) / 2. + base_rad);
     result_odom.pose.pose.position.y = odom_.pose.pose.position.y + 
-        distance_m[0] * sin(base_rad);
+        distance_m[0] * sin((current_body_roll_pos + prev_body_roll_pos) / 2. + base_rad);
   } else {
     double diff_yaw = (distance_m[1] - distance_m[0]) / WHEEL_DISTANCE;
     result_odom.pose.pose.position.x = odom_.pose.pose.position.x + 
-        (distance_m[0] + distance_m[1]) / 2. * cos(base_rad + diff_yaw / 2.);
+        (distance_m[0] + distance_m[1]) / 2. * cos((current_body_roll_pos + prev_body_roll_pos) / 2. + base_rad + diff_yaw / 2.);
     result_odom.pose.pose.position.y = odom_.pose.pose.position.y + 
-        (distance_m[0] + distance_m[1]) / 2. * sin(base_rad + diff_yaw / 2.);
+        (distance_m[0] + distance_m[1]) / 2. * sin((current_body_roll_pos + prev_body_roll_pos) / 2. + base_rad + diff_yaw / 2.);
     base_rad += diff_yaw;
   }
 
   // Change quaternion
-  quat_tf.setRPY(0., 0., - base_rad - body_roll_diff / 2.);
+  quat_tf.setRPY(0., 0., base_rad - 3. * body_roll_diff / 2.);
   tf2::convert(quat_tf, result_odom.pose.pose.orientation);
 
   result_odom.header.stamp = node_->get_clock()->now();
