@@ -51,12 +51,6 @@ void NekomimiBotWheelControl::update_wheel_goals() {
       goal_drive_vel[0] = -goal_body_roll_vel * (WHEEL_DISTANCE/2.) / WHEEL_RADIUS;
       goal_drive_vel[1] =  goal_body_roll_vel * (WHEEL_DISTANCE/2.) / WHEEL_RADIUS;
     }
-
-    std::cout << "goal_base_rad : " << goal_base_rad << std::endl;
-    std::cout << "diff : " << goal_base_rad - current_body_roll_pos << std::endl;
-    std::cout << "current_body_roll_pos : " << current_body_roll_pos << std::endl;
-    std::cout << "goal_body_roll_vel : " << goal_body_roll_vel << std::endl;
-    std::cout << "goal_drive_vel : [" << goal_drive_vel[0] << ", " << goal_drive_vel[1] << "]" << std::endl << std::endl;
   }
 
 }
