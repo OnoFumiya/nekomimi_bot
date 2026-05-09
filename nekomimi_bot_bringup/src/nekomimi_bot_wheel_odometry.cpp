@@ -34,7 +34,7 @@ void NekomimiBotWheelOdometry::update_odom()
   }
 
   // Change quaternion
-  quat_tf.setRPY(0., 0., base_rad + body_roll_diff / 2.);
+  quat_tf.setRPY(0., 0., - base_rad - body_roll_diff / 2.);
   tf2::convert(quat_tf, result_odom.pose.pose.orientation);
 
   result_odom.header.stamp = node_->get_clock()->now();
