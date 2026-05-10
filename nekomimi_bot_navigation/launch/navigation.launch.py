@@ -45,7 +45,7 @@ def generate_launch_description():
     start_yaw = 0.0
 
     # Map File Path
-    map_file = os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'map', 'map_example.yaml')
+    map_file = os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'map', 'sakura201.yaml')
 
     # Location File Path
     location_file = os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'location', 'location_example.yaml')
@@ -62,7 +62,7 @@ def generate_launch_description():
     keepout_map_file = os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'map', 'map_example.yaml')
 
     # Pan-Tilt Movement Config
-    use_pantilt_move = False
+    use_pantilt_move = True
 
     #####################################################################################
 
