@@ -31,8 +31,8 @@ amcl:
     recovery_alpha_fast: 0.0
     recovery_alpha_slow: 0.0
     resample_interval: 1
-    # robot_model_type: "nav2_amcl::OmniMotionModel"
-    robot_model_type: "nav2_amcl::DifferentialMotionModel"
+    robot_model_type: "nav2_amcl::OmniMotionModel"
+    # robot_model_type: "nav2_amcl::DifferentialMotionModel"
     save_pose_rate: 0.5
     sigma_hit: 0.2
     tf_broadcast: true
@@ -111,23 +111,23 @@ controller_server:
       batch_size: 1000
       ax_max: 3.0
       ax_min: -3.0
-      ay_max: 0.0
-      ay_min: 0.0
+      ay_max: 2.0
+      ay_min: -2.0
       az_max: 8.0
       vx_std: 0.2
       vy_std: 0.2
       wz_std: 0.4
       vx_max: 0.2
       vx_min: -0.1
-      vy_max: 0.0
+      vy_max: 0.15
       wz_max: 3.0
       iteration_count: 1
       prune_distance: 2.3
       transform_tolerance: 0.1
       temperature: 0.3
       gamma: 0.015
-      motion_model: "DiffDrive"
-      # motion_model: "Omni"
+      # motion_model: "DiffDrive"
+      motion_model: "Omni"
       visualize: true
       regenerate_noises: true
       TrajectoryVisualizer:
@@ -414,8 +414,8 @@ velocity_smoother:
     stamp_smoothed_velocity_with_smoothing_time: False
     scale_velocities: False
     feedback: "OPEN_LOOP"
-    max_velocity: [0.20, 0.00, 3.0]
-    min_velocity: [-0.10, 0.00, -3.0]
+    max_velocity: [0.20, 0.20, 3.0]
+    min_velocity: [-0.10, -0.20, -3.0]
     max_accel: [1.0, 1.0, 5.0]
     max_decel: [-1.0, -1.0, -5.0]
     odom_topic: /nekomimi_bot/odom
