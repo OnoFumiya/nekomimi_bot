@@ -45,10 +45,10 @@ def generate_launch_description():
     start_yaw = 0.0
 
     # Map File Path
-    map_file = os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'map', 'sakura201.yaml')
+    map_file = os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'map', 'map_example.yaml')
 
     # Location File Path
-    location_file = os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'location', 'sakura201_location.yaml')
+    location_file = os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'location', 'location_example.yaml')
 
     # Use Gazebo
     use_gazebo = False
@@ -59,7 +59,7 @@ def generate_launch_description():
 
     # Keepout Filter Map Config
     use_keepoutmap = False
-    keepout_map_file = os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'map', 'map_example.yaml')
+    keepout_map_file = os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'map', 'keepout_map_example.yaml')
 
     # Pan-Tilt Movement Config
     use_pantilt_move = True
