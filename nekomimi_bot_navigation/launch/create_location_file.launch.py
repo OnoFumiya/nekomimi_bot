@@ -16,7 +16,7 @@ def generate_launch_description():
         ),
         DeclareLaunchArgument(
             # mapのファイルパス
-            'map', default_value=os.path.join(get_package_share_directory("nekomimi_bot_navigation"), 'map', 'map_example.yaml')
+            'map', default_value=os.path.join(get_package_share_directory("nekomimi_bot_navigation"), 'map', 'sakura201.yaml')
         ),
         DeclareLaunchArgument(
             'use_rviz', default_value='True'

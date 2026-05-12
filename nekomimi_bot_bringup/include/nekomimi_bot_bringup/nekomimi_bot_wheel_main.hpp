@@ -32,7 +32,7 @@ private:
   rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr  sub_joint_info_;
 
   rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr          pub_odometry_;
-  rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr pub_body_roll_joint_;
+  rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr pub_body_roll_vel_;
   rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr pub_wheel_vel_;
 
   // Control & Sensing Callbacks
@@ -40,7 +40,7 @@ private:
   void control_callback();
 
   // Control Variables
-  std_msgs::msg::Float64MultiArray body_roll_joint_pos;
+  std_msgs::msg::Float64MultiArray body_roll_joint_vel;
   std_msgs::msg::Float64MultiArray wheel_joint_vel;
 
   std::map<std::string, double> joints_pos;

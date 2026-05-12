@@ -59,10 +59,13 @@ def generate_launch_description():
 
     # Keepout Filter Map Config
     use_keepoutmap = False
-    keepout_map_file = os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'map', 'map_example.yaml')
+    keepout_map_file = os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'map', 'keepout_map_example.yaml')
 
     # Pan-Tilt Movement Config
-    use_pantilt_move = False
+    use_pantilt_move = True
+
+    # Options...
+    use_omnidirectional = False
 
     #####################################################################################
 
@@ -79,7 +82,7 @@ def generate_launch_description():
     use_rviz = LaunchConfiguration('use_rviz')  # Customize
     use_sim_time = LaunchConfiguration('use_sim_time')
     params_file = PathJoinSubstitution(
-        [FindPackageShare('nekomimi_bot_navigation'), 'config', 'nav2_config.yaml']
+        [FindPackageShare('nekomimi_bot_navigation'), 'config', 'nav2_config_for_omni.yaml' if use_omnidirectional else 'nav2_config.yaml']
     )
     slamtool_param_file = PathJoinSubstitution(
         [FindPackageShare('nekomimi_bot_navigation'), 'config', 'slam_config.yaml']

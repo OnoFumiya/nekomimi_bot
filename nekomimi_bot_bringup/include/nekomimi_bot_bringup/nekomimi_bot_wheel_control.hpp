@@ -22,10 +22,10 @@ public:
   double WHEEL_DISTANCE;           // Wheel Distance between left and right [m]
   double WHEEL_RADIUS;             // Wheel Radius [m]
   int CYCLE_FEQUENCY;              // Process Rate [Hz]
-  bool BODY_ROLL_SMALL_RANGE;      // 
-  double DRIVING_STATUS_THRESHOLD; // 
+  double BODY_ROLL_RANGE;          // Body Roll Range [rad]
+  double DRIVING_STATUS_THRESHOLD; // Body Roll Threshold for Driving Status [rad]
 
-  double goal_body_roll_pos = 0.;
+  double goal_body_roll_vel = 0.;
   double goal_drive_vel[2] = {0, };
   double current_body_roll_pos = 0.;
 
@@ -39,7 +39,7 @@ public:
     WHEEL_DISTANCE = node_->get_parameter("wheel_distance").as_double();
     WHEEL_RADIUS = node_->get_parameter("wheel_radius").as_double();
     CYCLE_FEQUENCY = node_->get_parameter("cycle_fequency").as_int();
-    BODY_ROLL_SMALL_RANGE = node_->get_parameter("body_roll_small_range").as_bool();
+    BODY_ROLL_RANGE = node_->get_parameter("body_roll_range").as_double();
     DRIVING_STATUS_THRESHOLD = node_->get_parameter("driving_status_threshold").as_double();
 
     RCLCPP_INFO(node_->get_logger(), "NekoMimi Bot Wheel Control initialized.");

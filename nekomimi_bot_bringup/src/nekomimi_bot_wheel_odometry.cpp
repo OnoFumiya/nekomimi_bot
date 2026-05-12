@@ -16,34 +16,25 @@ void NekomimiBotWheelOdometry::update_odom()
   tf2::fromMsg(odom_.pose.pose.orientation, quat_tf);
   tf2::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
 
-  double diff_x = 0.,diff_y = 0., diff_yaw = 0.;
-  /*
-  diff_x
-  diff_y
-  diff_yaw
-  */
-  diff_yaw -= current_body_roll_pos - prev_body_roll_pos;
+  double body_roll_diff = current_body_roll_pos - prev_body_roll_pos;
+  double base_rad = prev_yaw + body_roll_diff / 2.;
 
-  double base_rad = (current_body_roll_pos + prev_body_roll_pos) / 2.;
   if ((0 < (distance_m[0] * distance_m[1])) && (fabsf(distance_m[0] - distance_m[1]) < 0.001)) {   // Translational motion
-    diff_x = (distance_m[0] + distance_m[1]) / 2.;
+    result_odom.pose.pose.position.x = odom_.pose.pose.position.x + 
+        distance_m[0] * cos((current_body_roll_pos + prev_body_roll_pos) / 2. + base_rad);
+    result_odom.pose.pose.position.y = odom_.pose.pose.position.y + 
+        distance_m[0] * sin((current_body_roll_pos + prev_body_roll_pos) / 2. + base_rad);
   } else {
-    diff_yaw += (distance_m[1] - distance_m[0]) / WHEEL_DISTANCE;
-    diff_x = (distance_m[0] + distance_m[1]) / 2.;
-    // geometry_msgs::msg::Point base_center;
-    // l / r = theta
-    // dm[0] / r0 = theta = dm[1] / r1
+    double diff_yaw = (distance_m[1] - distance_m[0]) / WHEEL_DISTANCE;
+    result_odom.pose.pose.position.x = odom_.pose.pose.position.x + 
+        (distance_m[0] + distance_m[1]) / 2. * cos((current_body_roll_pos + prev_body_roll_pos) / 2. + base_rad + diff_yaw / 2.);
+    result_odom.pose.pose.position.y = odom_.pose.pose.position.y + 
+        (distance_m[0] + distance_m[1]) / 2. * sin((current_body_roll_pos + prev_body_roll_pos) / 2. + base_rad + diff_yaw / 2.);
+    base_rad += diff_yaw;
   }
-  // diff_x = ;
-
-  // Update the Odometry
-  result_odom.pose.pose.position.x = odom_.pose.pose.position.x + 
-      diff_x * cos(prev_yaw + diff_yaw) - diff_y * sin(prev_yaw + diff_yaw);
-  result_odom.pose.pose.position.y = odom_.pose.pose.position.y + 
-      diff_x * sin(prev_yaw + diff_yaw) + diff_y * cos(prev_yaw + diff_yaw);
 
   // Change quaternion
-  quat_tf.setRPY(0., 0., (prev_yaw + diff_yaw));
+  quat_tf.setRPY(0., 0., base_rad - 3. * body_roll_diff / 2.);
   tf2::convert(quat_tf, result_odom.pose.pose.orientation);
 
   result_odom.header.stamp = node_->get_clock()->now();

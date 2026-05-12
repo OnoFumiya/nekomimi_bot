@@ -21,7 +21,7 @@ private:
 
 public:
   // robot parameters
-  int CYCLE_FEQUENCY;
+  int CYCLE_FEQUENCY;      // Process Rate [Hz]
   double WHEEL_DISTANCE;   // Wheel Distance between left and right [m]
   double WHEEL_RADIUS;     // Wheel Radius [m]
 
