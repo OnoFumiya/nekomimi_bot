@@ -35,13 +35,13 @@ sys.path.append(os.path.join(get_package_share_directory('realsense2_camera'), '
 import rs_launch
 
 local_parameters = [{'name': 'camera_name',                  'default': 'head_camera', 'description': 'camera unique name'},
-                    {'name': 'camera_namespace',             'default': 'camera', 'description': 'camera namespace'},
+                    {'name': 'camera_namespace',             'default': 'nekomimi_bot', 'description': 'camera namespace'},
                     {'name': 'device_type',                  'default': "d405", 'description': 'choose device by type'},
                     {'name': 'enable_color',                 'default': 'true', 'description': 'enable color stream'},
                     {'name': 'enable_depth',                 'default': 'true', 'description': 'enable depth stream'},
                     {'name': 'pointcloud.enable',            'default': 'true', 'description': 'enable pointcloud'},
                     {'name': 'pointcloud.ordered_pc',        'default': 'false', 'description': 'pointcloud ordered pc'},
-                    {'name': 'tf_prefix',                    'default': '', 'description': 'prefix to be prepended to all frame IDs'},
+                    {'name': 'tf_prefix',                    'default': 'nekomimi_bot/', 'description': 'prefix to be prepended to all frame IDs'},
                     {'name': 'rgb_camera.color_profile',     'default': '640x480x5', 'description': 'color stream profile'},
                     {'name': 'depth_module.depth_profile',   'default': '640x480x5', 'description': 'depth stream profile'},
                     {'name': 'depth_module.infra_profile',   'default': '640x480x5', 'description': 'infra streams (0/1/2) profile'},
