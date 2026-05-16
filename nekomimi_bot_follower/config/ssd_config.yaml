@@ -1,0 +1,36 @@
+ssd_ros:
+  ssd_ros:
+    ros__parameters:
+      image_show_flag: false
+      image_topic_name: "/nekomimi_bot/head_camera/color/image_raw"
+      in_scale_factor: 0.007843 # 1.00
+      confidence_threshold: 0.5
+      object_specified_enabled: true # false
+      specified_object_name: "person" # "face"
+
+  bbox_to_3d:
+    ros__parameters:
+      base_frame_name: "nekomimi_bot/base_footprint"
+      bbox_topic_name: "/ssd_ros/objects_rect" # yolo: yolo_ros/object_boxes, sam3: sam3_ros/object_boxes
+      cloud_topic_name: "/nekomimi_bot/head_camera/depth/color/points"
+      depth_image_topic_name: "/nekomimi_bot/head_camera/depth/image_rect_raw"
+      info_topic_name: "/nekomimi_bot/head_camera/color/camera_info"
+
+      # Options
+      positioning_detection_mode: "depth_image" # Options: "point_cloud", "fast_point", "depth_image"
+      enable_id: false
+
+      # Clipping box parameters (respect to camera frame)
+      x_min: -1.0
+      x_max: 1.0
+      y_min: -1.0
+      y_max: 1.0
+      z_min: 0.0
+      z_max: 1.0
+
+      # Point Cloud Processing
+      cluster_tolerance: 0.01
+      min_cluster_size: 50
+      max_cluster_size: 20000
+      noise_point_cloud_range: 0.01
+      voxel_leaf_size: 0.01

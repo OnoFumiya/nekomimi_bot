@@ -7,17 +7,17 @@ echo "╔══╣ Setup: NekoMimi Bot Audio(STARTING) ╠══╗"
 DIR=`pwd`
 
 # Install TTS packages for OpenPico
-cd ../sobits_tts/install/
+cd ../tts_ros/install/
 bash openpico.sh
 cd ../..
 
-cd sobits_speech_recognition/install/
+cd stt_ros/install/
 bash sherpa.sh
 cd ../..
 
 MODEL_NAME="sherpa-onnx-nemo-parakeet-tdt_ctc-0.6b-ja-35000-int8"
 BASE_URL="https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models"
-INSTALL_DIR="$HOME/.sobits_speech_recognition/sherpa_models"
+INSTALL_DIR="$HOME/.stt_ros/sherpa_models"
 
 ARCHIVE_TAR="${MODEL_NAME}.tar.bz2"
 ARCHIVE_GZ="${MODEL_NAME}.tar.gz"

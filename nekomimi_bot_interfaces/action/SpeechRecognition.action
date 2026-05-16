@@ -1,0 +1,10 @@
+# Goal
+int64 timeout_sec
+bool silent_mode
+float64 feedback_rate 0.5
+---
+# Result
+string result_text
+---
+# Feedback
+string addition_text

@@ -12,6 +12,8 @@ ros_packages=(
     "feetech_ros2_driver"
     "hls_lfcd_lds_driver"
     "realsense_ros"
+    "tts_ros"
+    "stt_ros"
     "2d_lidar_person_detection"
     "gazebo_worlds"
 )
@@ -35,14 +37,10 @@ for ((i = 0; i < ${#ros_packages[@]}; i++)) {
 sobits_packages=(
     "flex_nav"
     "explore_ros2"
-    "sobits_tts"
-    "sobits_speech_recognition"
 )
 check_packages=(
     "flex_nav"
     "explore_lite"
-    "sobits_tts"
-    "sobits_speech_recognition"
 )
 
 # clone packages from TeamSOBITS (if not exist)

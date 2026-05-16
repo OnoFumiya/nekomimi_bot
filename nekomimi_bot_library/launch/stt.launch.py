@@ -6,7 +6,7 @@ from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
-    package_name = 'sobits_speech_recognition'
+    package_name = 'stt_ros'
 
     stt_name_arg = DeclareLaunchArgument(
         'stt_name',

@@ -1,0 +1,10 @@
+# TextToSpeech.action
+# Goal
+string text
+---
+# Result
+bool success
+float32 total_time
+---
+# Feedback
+float32 remaining_time

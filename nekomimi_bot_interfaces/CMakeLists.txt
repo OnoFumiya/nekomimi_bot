@@ -16,6 +16,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   action/MoveToPose.action
   action/MoveWheelLinear.action
   action/MoveWheelRotate.action
+  action/TextToSpeech.action
+  action/SpeechRecognition.action
   DEPENDENCIES std_msgs geometry_msgs
 )
 

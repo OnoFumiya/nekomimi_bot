@@ -46,7 +46,7 @@ def generate_launch_description():
     )
 
     tts_server_node = Node(
-        package='sobits_tts',
+        package='tts_ros',
         executable='tts_action_server', 
         name='tts_action_server',
         namespace=LaunchConfiguration('namespace'),
