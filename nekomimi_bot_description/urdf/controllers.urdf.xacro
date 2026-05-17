@@ -6,7 +6,7 @@
     <ros2_control name="${name}" type="system">
       <hardware>
         <xacro:if value="${$(arg enable_gz)}">
-          <plugin>ign_ros2_control/IgnitionSystem</plugin>
+          <plugin>gz_ros2_control/GazeboSimSystem</plugin>
         </xacro:if>
         <xacro:unless value="${$(arg enable_gz)}">
           <xacro:property name="ftc_sl_port" value="$(arg ftc_sl_port)"/>
@@ -89,7 +89,7 @@
     <!-- Ignition ROS2 Control -->
     <xacro:if value="${$(arg enable_gz)}">
       <gazebo>
-        <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+        <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
           <ros>
             <namespace>${robot_name}</namespace>
           </ros>

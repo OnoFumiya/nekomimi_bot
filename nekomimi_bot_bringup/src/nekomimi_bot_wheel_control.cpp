@@ -31,7 +31,11 @@ void NekomimiBotWheelControl::update_wheel_goals() {
 
     if (fabsf(goal_base_rad - current_body_roll_pos) < (BODY_ROLL_MAX_VEL/CYCLE_FEQUENCY)) {
       if (fabs(goal_base_rad - current_body_roll_pos) < DRIVING_STATUS_THRESHOLD) {
-        goal_body_roll_vel = 0.;
+        if (fabs(goal_base_rad - current_body_roll_pos) < DRIVING_STATUS_THRESHOLD / 3.) {
+          goal_body_roll_vel = 0.;
+        } else {
+          goal_body_roll_vel = (goal_base_rad - current_body_roll_pos) * CYCLE_FEQUENCY / 9.;
+        }
         if (vel_twist.angular.z == 0.) {
           goal_drive_vel[0] =  pn * std::sqrt(std::pow(vel_twist.linear.x, 2.) + std::pow(vel_twist.linear.y, 2.)) / WHEEL_RADIUS;
           goal_drive_vel[1] =  pn * std::sqrt(std::pow(vel_twist.linear.x, 2.) + std::pow(vel_twist.linear.y, 2.)) / WHEEL_RADIUS;

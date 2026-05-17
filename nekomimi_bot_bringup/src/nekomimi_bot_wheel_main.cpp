@@ -50,7 +50,10 @@ NekomimiBotWheelController::NekomimiBotWheelController(const rclcpp::NodeOptions
 
   // Set the initial position of the wheel
   joints_pos.clear();
-  while (joints_pos.empty()) rclcpp::spin_some(this->get_node_base_interface());
+  // while (joints_pos.empty()) rclcpp::spin_some(this->get_node_base_interface()); // Warning: This may cause a deadlock if the joint_states topic is not published. Consider using a timeout or a different approach to ensure that joint states are received.
+  rclcpp::executors::SingleThreadedExecutor executor;
+  executor.add_node(this->get_node_base_interface());
+  while (joints_pos.empty()) executor.spin_some(); // (C++20)
 
   nekomimi_bot_wheel_control_->goal_body_roll_vel = 0.;
   nekomimi_bot_wheel_odometry_->prev_body_roll_pos = nekomimi_bot_wheel_control_->current_body_roll_pos = nekomimi_bot_wheel_odometry_->current_body_roll_pos = joints_pos[body_roll_joint_name];
@@ -94,7 +97,8 @@ void NekomimiBotWheelController::joint_callback(const sensor_msgs::msg::JointSta
 // start_up / shut_down sound
 void NekomimiBotWheelController::sound_play(std::string sound_name) {
   // Get the package path
-  std::string package_path = ament_index_cpp::get_package_share_directory("nekomimi_bot_bringup");
+  // std::string package_path = ament_index_cpp::get_package_share_directory("nekomimi_bot_bringup"); // (C++18)
+  std::string package_path = ament_index_cpp::get_package_share_path("nekomimi_bot_bringup").string(); // (C++20)
   std::string sound_path   = package_path + "/sound_files/" + sound_name + ".mp3";
 
   // Log output

@@ -9,11 +9,12 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
 find_package(ament_index_cpp REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
-find_package(std_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(trajectory_msgs REQUIRED)
@@ -37,18 +38,33 @@ rclcpp_components_register_node(${PROJECT_NAME}
   PLUGIN "nekomimi_bot::NekomimiBotWheelController"
   EXECUTABLE nekomimi_bot_wheel_node)
 
-ament_target_dependencies(${PROJECT_NAME}
-  rclcpp
-  rclcpp_components
-  std_msgs
-  ament_index_cpp
-  tf2
-  tf2_ros
-  tf2_geometry_msgs
-  nav_msgs
-  sensor_msgs
-  trajectory_msgs
-  control_msgs
+# ament_target_dependencies(${PROJECT_NAME}
+#   rclcpp
+#   rclcpp_components
+#   geometry_msgs
+#   std_msgs
+#   ament_index_cpp
+#   tf2
+#   tf2_ros
+#   tf2_geometry_msgs
+#   nav_msgs
+#   sensor_msgs
+#   trajectory_msgs
+#   control_msgs
+# )
+target_link_libraries(${PROJECT_NAME}
+  rclcpp::rclcpp
+  rclcpp_components::component
+  ament_index_cpp::ament_index_cpp
+  tf2::tf2
+  tf2_ros::tf2_ros
+  ${geometry_msgs_TARGETS}
+  ${std_msgs_TARGETS}
+  ${tf2_geometry_msgs_TARGETS}
+  ${nav_msgs_TARGETS}
+  ${sensor_msgs_TARGETS}
+  ${trajectory_msgs_TARGETS}
+  ${control_msgs_TARGETS}
 )
 
 install(TARGETS ${PROJECT_NAME}

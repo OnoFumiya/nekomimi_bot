@@ -3,12 +3,12 @@
 #include "nekomimi_bot_interfaces/action/move_joint.hpp"
 #include "nekomimi_bot_interfaces/action/move_to_pose.hpp"
 
-#include "trajectory_msgs/msg/joint_trajectory.hpp"
-#include "sensor_msgs/msg/joint_state.hpp"
-#include "geometry_msgs/msg/transform_stamped.hpp"
-#include "geometry_msgs/msg/quaternion.h"
-#include "geometry_msgs/msg/vector3.h"
-#include "geometry_msgs/msg/point.h"
+#include <trajectory_msgs/msg/joint_trajectory.hpp>
+#include <sensor_msgs/msg/joint_state.hpp>
+#include <geometry_msgs/msg/transform_stamped.hpp>
+#include <geometry_msgs/msg/quaternion.hpp>
+#include <geometry_msgs/msg/vector3.hpp>
+#include <geometry_msgs/msg/point.hpp>
 
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_action/rclcpp_action.hpp>

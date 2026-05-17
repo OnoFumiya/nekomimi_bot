@@ -78,13 +78,13 @@ def launch_gz(context, *args, **kwargs):
             'ftc_sl_port'    : ftc_sl_port,
         })
 
-    if enable_gz == 'False':
-        controller_config = os.path.join(get_package_share_directory(
-            'nekomimi_bot_bringup'),
-            'config',
-            'controllers.yaml'
-        )
+    controller_config = os.path.join(get_package_share_directory(
+        'nekomimi_bot_bringup'),
+        'config',
+        'controllers.yaml'
+    )
 
+    if enable_gz == 'False':
         controller_manager = Node(
             package="controller_manager",
             executable="ros2_control_node",
@@ -111,19 +111,19 @@ def launch_gz(context, *args, **kwargs):
             }.items(),
         )
 
-        realsense_node = IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([
-                PathJoinSubstitution([
-                    FindPackageShare('nekomimi_bot_bringup'),
-                    'launch',
-                    'rs.launch.py'
-                ])
-            ]),
-            launch_arguments={
-                'camera_namespace': robot_name,
-                'tf_prefix' : robot_name + "/",
-            }.items(),
-        )
+        # realsense_node = IncludeLaunchDescription(
+        #     PythonLaunchDescriptionSource([
+        #         PathJoinSubstitution([
+        #             FindPackageShare('nekomimi_bot_bringup'),
+        #             'launch',
+        #             'rs.launch.py'
+        #         ])
+        #     ]),
+        #     launch_arguments={
+        #         'camera_namespace': robot_name,
+        #         'tf_prefix' : robot_name + "/",
+        #     }.items(),
+        # )
 
     joint_state_broadcaster = Node(
         package='controller_manager',
@@ -145,6 +145,7 @@ def launch_gz(context, *args, **kwargs):
             'head_position_controller',
             '-c', 'controller_manager', '--activate'
         ],
+        parameters=[controller_config],
     )
 
     mobile_base_position_controller = Node(
@@ -156,6 +157,7 @@ def launch_gz(context, *args, **kwargs):
             'mobile_base_position_controller',
             '-c', 'controller_manager', '--activate'
         ],
+        parameters=[controller_config],
     )
 
     velocity_controller = Node(
@@ -167,6 +169,7 @@ def launch_gz(context, *args, **kwargs):
             'velocity_controller',
             '-c', 'controller_manager', '--activate'
         ],
+        parameters=[controller_config],
     )
 
     robot_state_publisher_node = Node(
@@ -247,7 +250,7 @@ def launch_gz(context, *args, **kwargs):
             velocity_controller,
             robot_state_publisher_node,
             lidar_node,
-            realsense_node,
+            # realsense_node,
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=joint_state_broadcaster,

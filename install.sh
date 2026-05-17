@@ -11,7 +11,7 @@ cd ..
 ros_packages=(
     "feetech_ros2_driver"
     "hls_lfcd_lds_driver"
-    "realsense_ros"
+    # "realsense_ros" # TODO: Release Lyrical version is not available yet
     "tts_ros"
     "stt_ros"
     "2d_lidar_person_detection"
@@ -35,12 +35,12 @@ for ((i = 0; i < ${#ros_packages[@]}; i++)) {
 
 # Additional packages for navigation of TeamSOBITS repository
 sobits_packages=(
-    "flex_nav"
-    "explore_ros2"
+    # "flex_nav"     # TODO: Release Lyrical version is not available yet
+    # "explore_ros2" # TODO: Release Lyrical version is not available yet
 )
 check_packages=(
-    "flex_nav"
-    "explore_lite"
+    # "flex_nav"     # Same as above
+    # "explore_lite" # Same as above
 )
 
 # clone packages from TeamSOBITS (if not exist)
@@ -81,9 +81,7 @@ sudo apt-get install -y \
     ros-$ROS_DISTRO-controller-interface \
     ros-$ROS_DISTRO-controller-manager \
     ros-$ROS_DISTRO-controller-manager-msgs \
-    ros-$ROS_DISTRO-position-controllers \
-    ros-$ROS_DISTRO-velocity-controllers \
-    ros-$ROS_DISTRO-effort-controllers \
+    ros-$ROS_DISTRO-forward-command-controller \ # New controller within JointTrajectoryController
     ros-$ROS_DISTRO-joint-trajectory-controller \
     ros-$ROS_DISTRO-joint-state-publisher \
     ros-$ROS_DISTRO-joint-state-publisher-gui \
@@ -95,7 +93,6 @@ sudo apt-get install -y \
     ros-$ROS_DISTRO-urdf \
     ros-$ROS_DISTRO-urdf-launch \
     ros-$ROS_DISTRO-xacro \
-    ros-$ROS_DISTRO-moveit \
     ros-$ROS_DISTRO-std-msgs \
     ros-$ROS_DISTRO-geometry-msgs \
     ros-$ROS_DISTRO-sensor-msgs \
@@ -114,7 +111,11 @@ sudo apt-get install -y \
     ros-$ROS_DISTRO-ros-gz-bridge \
     ros-$ROS_DISTRO-ros-gz-sim \
     ros-$ROS_DISTRO-ros-gz-interfaces \
-    ros-$ROS_DISTRO-usb-cam
+    # ros-$ROS_DISTRO-usb-cam \
+    # ros-$ROS_DISTRO-moveit \
+    # ros-$ROS_DISTRO-position-controllers \ # End release of Lyrical, this package is not available. Use forward_command_controller and joint_trajectory_controller instead.
+    # ros-$ROS_DISTRO-velocity-controllers \ # Same as above
+    # ros-$ROS_DISTRO-effort-controllers \   # Same as above
 
 # Set up the environment
 sudo usermod -aG dialout $USERNAME
@@ -134,11 +135,11 @@ sudo apt-get install -y \
 
 # Install Navigation package
 sudo apt install -y \
-    ros-$ROS_DISTRO-navigation2 \
-    ros-$ROS_DISTRO-nav2-bringup \
-    ros-$ROS_DISTRO-nav2-map-server \
-    ros-$ROS_DISTRO-nav2-lifecycle-manager \
-    ros-$ROS_DISTRO-slam-toolbox \
+    # ros-$ROS_DISTRO-navigation2 \   # TODO: Release Lyrical version is not available yet
+    # ros-$ROS_DISTRO-nav2-bringup \  # Same as above
+    # ros-$ROS_DISTRO-nav2-map-server \ # Same as above
+    # ros-$ROS_DISTRO-nav2-lifecycle-manager \ # Same as above
+    # ros-$ROS_DISTRO-slam-toolbox \ # Same as above
     ros-$ROS_DISTRO-rmw-cyclonedds-cpp
 
 echo export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp >> ~/.bashrc

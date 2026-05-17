@@ -6,10 +6,10 @@
       type: joint_trajectory_controller/JointTrajectoryController
 
     mobile_base_position_controller:
-      type: velocity_controllers/JointGroupVelocityController
+      type: forward_command_controller/ForwardCommandController
 
     velocity_controller:
-      type: velocity_controllers/JointGroupVelocityController
+      type: forward_command_controller/ForwardCommandController
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
@@ -34,9 +34,13 @@
     joints:
       - body_roll_joint
 
+    interface_name: velocity
+
 
 /**/velocity_controller:
   ros__parameters:
     joints:
       - left_wheel_joint
       - right_wheel_joint
+
+    interface_name: velocity

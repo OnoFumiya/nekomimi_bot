@@ -11,7 +11,8 @@
 
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
-#include <ament_index_cpp/get_package_share_directory.hpp>
+// #include <ament_index_cpp/get_package_share_directory.hpp> // (C++18)
+#include <ament_index_cpp/get_package_share_path.hpp>      // (C++20)
 
 #include "nekomimi_bot_bringup/nekomimi_bot_wheel_control.hpp"
 #include "nekomimi_bot_bringup/nekomimi_bot_wheel_odometry.hpp"
