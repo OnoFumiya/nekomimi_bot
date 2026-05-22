@@ -11,21 +11,14 @@ from launch.conditions import IfCondition
 
 def generate_launch_description():
 
-    voc_object_prototxt_path = os.path.join(get_package_share_directory('ssd_ros'), 'models', 'voc_object.prototxt')
-    voc_object_caffemodel_path = os.path.join(get_package_share_directory('ssd_ros'), 'models', 'voc_object.caffemodel')
-    voc_object_names_path = os.path.join(get_package_share_directory('ssd_ros'), 'models', 'voc_object_names.txt')
+    # SSD Configfile path
+    params_file = os.path.join(get_package_share_directory('nekomimi_bot_follower'), 'config', 'ssd_config.yaml')
 
-    # 顔認識用
-    # voc_object_prototxt_path = os.path.join(get_package_share_directory('ssd_ros'), 'models', 'face.prototxt')
-    # voc_object_caffemodel_path = os.path.join(get_package_share_directory('ssd_ros'), 'models', 'face.caffemodel')
-    # voc_object_names_path = os.path.join(get_package_share_directory('ssd_ros'), 'models', 'face_names.txt')
 
-    params_file = LaunchConfiguration('params_file')
-    params_file_arg = DeclareLaunchArgument(
-        'params_file',
-        default_value=os.path.join(get_package_share_directory('nekomimi_bot_follower'), 'config', 'ssd_config.yaml'),
-        description='Full path to the ROS2 parameters file to use'
-    )
+    # SSD (Objects Models 'Directory') (example: person, chair, etc...)
+    objects_model_dir = os.path.join(get_package_share_directory('ssd_ros'), 'models', 'objects_model')
+
+
 
     execute_default = LaunchConfiguration("execute_default")
     execute_default_cmd = DeclareLaunchArgument(
@@ -34,26 +27,22 @@ def generate_launch_description():
         default_value="true",
     )
 
-    ssd_prototxt_name = LaunchConfiguration("ssd_prototxt_name")
-    ssd_prototxt_name_cmd = DeclareLaunchArgument(
-        "ssd_prototxt_name",
-        description="ニューラルネットの構造を記述したtxt",
-        default_value=voc_object_prototxt_path,
+
+    model_directory = LaunchConfiguration("model_directory")
+    model_directory_cmd = DeclareLaunchArgument(
+        "model_directory",
+        description="Directory containing the model files (prototxt, caffemodel, class names)",
+        default_value=objects_model_dir, # objects_model_dir or face_model_dir
     )
 
-    ssd_caffemodel_name = LaunchConfiguration("ssd_caffemodel_name")
-    ssd_caffemodel_name_cmd = DeclareLaunchArgument(
-        "ssd_caffemodel_name",
-        description="学習済みモデル",
-        default_value=voc_object_caffemodel_path,
+
+    namespace = LaunchConfiguration("namespace")
+    namespace_cmd = DeclareLaunchArgument(
+        "namespace",
+        description="Namespace for the nodes",
+        default_value="ssd_ros",
     )
 
-    ssd_class_names_file = LaunchConfiguration("ssd_class_names_file")
-    ssd_class_names_file_cmd = DeclareLaunchArgument(
-        "ssd_class_names_file",
-        description="物体名リスト",
-        default_value=voc_object_names_path,
-    )
 
     ssd_ros_node_cmd = Node(
         package="ssd_ros",
@@ -63,9 +52,7 @@ def generate_launch_description():
         parameters=[
             {
                 "execute_default": execute_default,
-                "ssd_prototxt_name": ssd_prototxt_name,
-                "ssd_caffemodel_name": ssd_caffemodel_name,
-                "ssd_class_names_file": ssd_class_names_file,
+                "model_directory": model_directory,
             },
             params_file,
         ],
@@ -96,10 +83,8 @@ def generate_launch_description():
     return LaunchDescription(
         [
             execute_default_cmd,
-            params_file_arg,
-            ssd_prototxt_name_cmd,
-            ssd_caffemodel_name_cmd,
-            ssd_class_names_file_cmd,
+            model_directory_cmd,
+            namespace_cmd,
             ssd_ros_node_cmd,
             use_3d_cmd,
             bbox_to_3d_cmd,

@@ -3,10 +3,9 @@ ssd_ros:
     ros__parameters:
       image_show_flag: false
       image_topic_name: "/nekomimi_bot/head_camera/color/image_raw"
-      in_scale_factor: 0.007843 # 1.00
       confidence_threshold: 0.5
-      object_specified_enabled: true # false
-      specified_object_name: "person" # "face"
+      specified_object_class: ["person"]
+      qos_reliability: "RELIABLE"
 
   bbox_to_3d:
     ros__parameters:
@@ -15,6 +14,12 @@ ssd_ros:
       cloud_topic_name: "/nekomimi_bot/head_camera/depth/color/points"
       depth_image_topic_name: "/nekomimi_bot/head_camera/depth/image_rect_raw"
       info_topic_name: "/nekomimi_bot/head_camera/color/camera_info"
+
+      # QoS Settings
+      bbox_qos_reliability: "RELIABLE"
+      cloud_qos_reliability: "RELIABLE"
+      depth_qos_reliability: "RELIABLE"
+      info_qos_reliability: "RELIABLE"
 
       # Options
       positioning_detection_mode: "depth_image" # Options: "point_cloud", "fast_point", "depth_image"
