@@ -1,9 +1,15 @@
 #include <iostream>
 #include <random>
+#include <string>
+#include <cstdio>
+#include <memory>
+#include <stdexcept>
+#include <regex>
 
 #include <std_msgs/msg/bool.hpp>
 #include <std_msgs/msg/float64_multi_array.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
+#include <sensor_msgs/msg/battery_state.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 
@@ -35,6 +41,7 @@ private:
   rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr          pub_odometry_;
   rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr pub_body_roll_vel_;
   rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr pub_wheel_vel_;
+  rclcpp::Publisher<sensor_msgs::msg::BatteryState>::SharedPtr   pub_battery_;
 
   // Control & Sensing Callbacks
   void joint_callback(const sensor_msgs::msg::JointState::SharedPtr msg);
@@ -43,6 +50,9 @@ private:
   // Control Variables
   std_msgs::msg::Float64MultiArray body_roll_joint_vel;
   std_msgs::msg::Float64MultiArray wheel_joint_vel;
+
+  // Battery Info
+  sensor_msgs::msg::BatteryState battery_value;
 
   std::map<std::string, double> joints_pos;
 

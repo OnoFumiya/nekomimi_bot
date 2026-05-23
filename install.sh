@@ -142,7 +142,7 @@ sudo apt install -y \
     # ros-$ROS_DISTRO-nav2-map-server \ # Same as above
     # ros-$ROS_DISTRO-nav2-lifecycle-manager \ # Same as above
     # ros-$ROS_DISTRO-slam-toolbox \ # Same as above
-    ros-$ROS_DISTRO-rmw-cyclonedds-cpp
+    ros-$ROS_DISTRO-rmw-cyclonedds
 
 echo export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp >> ~/.bashrc
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
