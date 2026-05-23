@@ -81,7 +81,7 @@ sudo apt-get install -y \
     ros-$ROS_DISTRO-controller-interface \
     ros-$ROS_DISTRO-controller-manager \
     ros-$ROS_DISTRO-controller-manager-msgs \
-    ros-$ROS_DISTRO-forward-command-controller \ # New controller within JointTrajectoryController
+    ros-$ROS_DISTRO-forward-command-controller \
     ros-$ROS_DISTRO-joint-trajectory-controller \
     ros-$ROS_DISTRO-joint-state-publisher \
     ros-$ROS_DISTRO-joint-state-publisher-gui \
@@ -110,7 +110,7 @@ sudo apt-get install -y \
     ros-$ROS_DISTRO-gps-msgs \
     ros-$ROS_DISTRO-ros-gz-bridge \
     ros-$ROS_DISTRO-ros-gz-sim \
-    ros-$ROS_DISTRO-ros-gz-interfaces \
+    ros-$ROS_DISTRO-ros-gz-interfaces
     # ros-$ROS_DISTRO-usb-cam \
     # ros-$ROS_DISTRO-moveit \
     # ros-$ROS_DISTRO-position-controllers \ # End release of Lyrical, this package is not available. Use forward_command_controller and joint_trajectory_controller instead.
@@ -137,12 +137,12 @@ sudo apt-get install -y \
 
 # Install Navigation package
 sudo apt install -y \
+    ros-$ROS_DISTRO-rmw-cyclonedds-cpp
     # ros-$ROS_DISTRO-navigation2 \   # TODO: Release Lyrical version is not available yet
     # ros-$ROS_DISTRO-nav2-bringup \  # Same as above
     # ros-$ROS_DISTRO-nav2-map-server \ # Same as above
     # ros-$ROS_DISTRO-nav2-lifecycle-manager \ # Same as above
     # ros-$ROS_DISTRO-slam-toolbox \ # Same as above
-    ros-$ROS_DISTRO-rmw-cyclonedds
 
 echo export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp >> ~/.bashrc
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp

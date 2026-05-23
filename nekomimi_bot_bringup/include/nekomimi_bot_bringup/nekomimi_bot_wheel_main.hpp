@@ -46,6 +46,8 @@ private:
   // Control & Sensing Callbacks
   void joint_callback(const sensor_msgs::msg::JointState::SharedPtr msg);
   void control_callback();
+  // Get Battery Level
+  int get_battery_level();
 
   // Control Variables
   std_msgs::msg::Float64MultiArray body_roll_joint_vel;

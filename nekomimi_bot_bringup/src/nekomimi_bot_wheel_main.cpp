@@ -171,6 +171,14 @@ void NekomimiBotWheelController::control_callback() {
   nekomimi_bot_wheel_odometry_->pose_broadcaster();
   pub_odometry_->publish(nekomimi_bot_wheel_odometry_->odom_);
 
+  // Publish Battery State
+  battery_value.header.stamp = this->get_clock()->now();
+  int battery_level = get_battery_level();
+  if (battery_level != -1) {
+    battery_value.percentage = battery_level;
+    pub_battery_->publish(battery_value);
+  }
+
   // Update Previous data
   nekomimi_bot_wheel_odometry_->prev_body_roll_pos = nekomimi_bot_wheel_odometry_->current_body_roll_pos;
   for (int i=0; i<2; i++)
