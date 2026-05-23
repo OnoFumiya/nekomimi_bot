@@ -47,6 +47,8 @@ NekomimiBotWheelController::NekomimiBotWheelController(const rclcpp::NodeOptions
       this->get_parameter("rotate_controller_name").as_string() + "/commands", qos_profile);
   pub_wheel_vel_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(
       this->get_parameter("wheel_controller_name").as_string() + "/commands", qos_profile);
+  pub_battery_ = this->create_publisher<sensor_msgs::msg::BatteryState>(
+      "/battery_state", qos_profile);
 
   // Set the initial position of the wheel
   joints_pos.clear();
@@ -73,6 +75,9 @@ NekomimiBotWheelController::NekomimiBotWheelController(const rclcpp::NodeOptions
   nekomimi_bot_wheel_odometry_->odom_.header.stamp    = this->get_clock()->now();
   nekomimi_bot_wheel_odometry_->odom_.header.frame_id = robot_name + "odom";
   nekomimi_bot_wheel_odometry_->odom_.child_frame_id  = robot_name + this->get_parameter("robot_base_frame").as_string();;
+
+  // Initialize Battery State
+  battery_value.header.frame_id = this->get_parameter("robot_base_frame").as_string();
 
   // Start up sound
   sound_play("start_up");
@@ -102,6 +107,30 @@ void NekomimiBotWheelController::sound_play(std::string sound_name) {
 
   // sound play
   std::system(("mpg321 --quiet " + sound_path + " &").c_str());
+}
+
+int NekomimiBotWheelController::get_battery_level() {
+  int battery_level = -1;
+  char buffer[128];
+  std::string result = "";
+
+  std::unique_ptr<FILE, int(*)(FILE*)> pipe(popen("acpi -b", "r"), pclose);
+  if (!pipe) {
+    return battery_level;
+  }
+
+  while (fgets(buffer, sizeof(buffer), pipe.get()) != nullptr) {
+    result += buffer;
+  }
+
+  std::regex pattern(R"((\d+)%)");
+  std::smatch match;
+
+  if (std::regex_search(result, match, pattern)) {
+    battery_level = std::stoi(match[1].str());
+  }
+
+  return battery_level;
 }
 
 // Control wheel
@@ -137,6 +166,14 @@ void NekomimiBotWheelController::control_callback() {
   // Publish Odometry
   nekomimi_bot_wheel_odometry_->pose_broadcaster();
   pub_odometry_->publish(nekomimi_bot_wheel_odometry_->odom_);
+
+  // Publish Battery State
+  battery_value.header.stamp = this->get_clock()->now();
+  int battery_level = get_battery_level();
+  if (battery_level != -1) {
+    battery_value.percentage = battery_level;
+    pub_battery_->publish(battery_value);
+  }
 
   // Update Previous data
   nekomimi_bot_wheel_odometry_->prev_body_roll_pos = nekomimi_bot_wheel_odometry_->current_body_roll_pos;
