@@ -120,7 +120,7 @@ ros2 launch nekomimi_bot_description display.launch.py
 
 正常に動作した場合は，次のようにRvizが表示されます．
 
-![NekoMimi Bot Display with Rviz](img//nekomimi_bot_display.png)
+![NekoMimi Bot Display with Rviz](img/nekomimi_bot_display.png)
 
 ## ソフトウェア
 <details>
@@ -193,7 +193,7 @@ ros2 launch nekomimi_bot_description display.launch.py
 
 NekoMimi Botはオープンソースハードウェアとして [Onshape](https://cad.onshape.com/documents/a085ea4db45b14d2ae110243/w/7ac4cf7de5a48b62c0d544c0/e/fe620bf9906d8a5ba8b4f91b?renderMode=0&uiState=6a11eb768d8f51332c48bb29) にて公開しております．
 
-![NekoMimi Bot in OnShape](nekomimi_bot/docs/img/nekomimi_bot_onshape.png)
+![NekoMimi Bot in OnShape](img/nekomimi_bot_onshape.png)
 
 <details>
 <summary>ハードウェアの詳細についてはこちらを確認してください．</summary>
