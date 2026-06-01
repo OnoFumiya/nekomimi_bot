@@ -169,7 +169,8 @@ void NekomimiBotWheelController::control_callback() {
 
   // Publish Battery State
   battery_value.header.stamp = this->get_clock()->now();
-  int battery_level = get_battery_level();
+  // int battery_level = get_battery_level();
+  int battery_level = 100;
   if (battery_level != -1) {
     battery_value.percentage = battery_level;
     pub_battery_->publish(battery_value);
