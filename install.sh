@@ -15,6 +15,7 @@ ros_packages=(
     "tts_ros"
     "stt_ros"
     "2d_lidar_person_detection"
+    "blockly_ros2"
     "gazebo_worlds"
 )
 

@@ -19,6 +19,9 @@ NekomimiBotWheelController::NekomimiBotWheelController(const rclcpp::NodeOptions
   this->declare_parameter("body_roll_range", -1.);
   this->declare_parameter("driving_status_threshold", 0.26);
 
+  this->declare_parameter("pc_battery_topic", "/battery_state");
+  this->declare_parameter("dummy_battery_value", -1);
+
 
   body_roll_joint_name = this->get_parameter("body_roll_joint").as_string();
   drive_joints_names   = this->get_parameter("drive_joints").as_string_array();
@@ -47,8 +50,12 @@ NekomimiBotWheelController::NekomimiBotWheelController(const rclcpp::NodeOptions
       this->get_parameter("rotate_controller_name").as_string() + "/commands", qos_profile);
   pub_wheel_vel_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(
       this->get_parameter("wheel_controller_name").as_string() + "/commands", qos_profile);
-  pub_battery_ = this->create_publisher<sensor_msgs::msg::BatteryState>(
-      "/battery_state", qos_profile);
+
+  battery_topic_name = this->get_parameter("pc_battery_topic").as_string();
+  if (battery_topic_name != "") {
+    pub_battery_ = this->create_publisher<sensor_msgs::msg::BatteryState>(
+        battery_topic_name, qos_profile);
+  }
 
   // Set the initial position of the wheel
   joints_pos.clear();
@@ -168,11 +175,20 @@ void NekomimiBotWheelController::control_callback() {
   pub_odometry_->publish(nekomimi_bot_wheel_odometry_->odom_);
 
   // Publish Battery State
-  battery_value.header.stamp = this->get_clock()->now();
-  int battery_level = get_battery_level();
-  if (battery_level != -1) {
-    battery_value.percentage = battery_level;
-    pub_battery_->publish(battery_value);
+  if (battery_topic_name != "") {
+    battery_value.header.stamp = this->get_clock()->now();
+
+    int battery_level;
+    if (this->get_parameter("dummy_battery_value").as_int() != -1) {
+      battery_level = this->get_parameter("dummy_battery_value").as_int();
+    } else {
+      battery_level = get_battery_level();
+    }
+
+    if (battery_level != -1) {
+      battery_value.percentage = battery_level;
+      pub_battery_->publish(battery_value);
+    }
   }
 
   // Update Previous data
