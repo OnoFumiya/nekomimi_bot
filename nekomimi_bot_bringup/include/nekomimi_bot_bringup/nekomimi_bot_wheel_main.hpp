@@ -53,6 +53,7 @@ private:
   std_msgs::msg::Float64MultiArray wheel_joint_vel;
 
   // Battery Info
+  std::string battery_topic_name;
   sensor_msgs::msg::BatteryState battery_value;
 
   std::map<std::string, double> joints_pos;
