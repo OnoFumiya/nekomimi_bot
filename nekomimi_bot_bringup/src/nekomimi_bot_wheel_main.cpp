@@ -20,7 +20,7 @@ NekomimiBotWheelController::NekomimiBotWheelController(const rclcpp::NodeOptions
   this->declare_parameter("driving_status_threshold", 0.26);
 
   this->declare_parameter("pc_battery_topic", "/battery_state");
-  this->declare_parameter("dummy_battery_value", 100);
+  this->declare_parameter("dummy_battery_value", -1);
 
 
   body_roll_joint_name = this->get_parameter("body_roll_joint").as_string();

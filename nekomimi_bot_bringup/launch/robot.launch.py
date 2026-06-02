@@ -204,6 +204,10 @@ def launch_gz(context, *args, **kwargs):
         parameters=[
             wheel_controller_config,
             {"use_sim_time": True if enable_gz == 'True' else False},
+            {"pc_battery_topic": "/battery_state"},
+            # {"pc_battery_topic": ""},
+            {"dummy_battery_value": 100},
+            # {"dummy_battery_value": -1},
         ],
         output="screen",
     )
