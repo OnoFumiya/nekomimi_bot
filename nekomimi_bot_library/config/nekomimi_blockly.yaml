@@ -18,7 +18,7 @@ move_wheel_rotate:
     msg_type: "nekomimi_bot_interfaces/MoveWheelRotate"
     mode: "action"
     value_rules:
-        target_yaw: {"type": "float", "name": "回転: "}
+        target_yaw: {"type": "deg", "name": "回転: "}
         # time_allowance: {"type": "time", "name": "時間"}
 
 speech_word:

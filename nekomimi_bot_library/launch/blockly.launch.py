@@ -25,12 +25,6 @@ def generate_launch_description():
         description="Custom Block to use Blockly structure config file"
     )
 
-    port_arg = DeclareLaunchArgument(
-        "port",
-        default_value="5000",
-        description="port number for network."
-    )
-
     ui_bringup_arg = DeclareLaunchArgument(
         "ui_bringup",
         default_value="False",
@@ -46,7 +40,6 @@ def generate_launch_description():
     return LaunchDescription([
         namespace_arg,
         block_config_arg,
-        port_arg,
         ui_bringup_arg,
         qrcode_view_arg,
         OpaqueFunction(function = node_bringup),
@@ -65,7 +58,7 @@ def node_bringup(context, *args, **kwargs):
         parameters=[
             {
                 "block_config": LaunchConfiguration("block_config"),
-                "port": LaunchConfiguration("port"),
+                "port": 5000,
                 "ui_bringup": LaunchConfiguration("ui_bringup"),
             }
         ]
