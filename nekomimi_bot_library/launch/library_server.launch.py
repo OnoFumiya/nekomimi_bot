@@ -68,18 +68,18 @@ def generate_launch_description():
         }.items(),
     )
 
-    blockly_node = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([
-            PathJoinSubstitution([
-                FindPackageShare('nekomimi_bot_library'),
-                'launch',
-                'blockly.launch.py'
-            ])
-        ]),
-        launch_arguments={
-            'blockly_namespace': LaunchConfiguration('robot_name'),
-        }.items(),
-    )
+    # blockly_node = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource([
+    #         PathJoinSubstitution([
+    #             FindPackageShare('nekomimi_bot_library'),
+    #             'launch',
+    #             'blockly.launch.py'
+    #         ])
+    #     ]),
+    #     launch_arguments={
+    #         'blockly_namespace': LaunchConfiguration('robot_name'),
+    #     }.items(),
+    # )
 
     return LaunchDescription([
         arg_robot_name,
@@ -88,5 +88,5 @@ def generate_launch_description():
         wheel_action_server_node,
         tts_node,
         stt_node,
-        blockly_node,
+        # blockly_node,
     ])
