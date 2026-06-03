@@ -5,6 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
+        - /QR code1/Topic1
       Splitter Ratio: 0.5222482681274414
     Tree Height: 147
   - Class: rviz_common/Selection
