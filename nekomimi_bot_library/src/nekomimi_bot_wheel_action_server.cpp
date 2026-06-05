@@ -142,7 +142,7 @@ void WheelActionServer::exe_move_wheel_linear(
   this->init_odom_ = this->curt_odom_;
   rclcpp::Rate loop_rate(10);
 
-  while (curt_dist < goal_dist) {
+  while (curt_dist < (goal_dist - 0.01)) { // TODO: Get the parameters from the action goal
     // Check if the goal has been canceled
     if (goal_handle->is_canceling()) {
       RCLCPP_INFO(this->get_logger(), "Goal has been canceled");
@@ -293,7 +293,7 @@ void WheelActionServer::exe_move_wheel_rotate(
     } else {
       vel_angular = kp * (goal_angle + 0.001 - moved_angle)
                   - kd * vel_diff
-                  + ki * (goal_angle + 0.001 - moved_angle) * pow(elapsed_time, 2) * (22.5 / goal_angle);
+                  + ki * (goal_angle + 0.001 - moved_angle) * pow(elapsed_time, 2) / 8.0 * goal_angle;
     }
 
     // Apply the maximum speed limit
