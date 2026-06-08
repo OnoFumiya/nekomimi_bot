@@ -101,16 +101,7 @@ Visualization Manager:
           Enabled: true
           Name: Location Arrows
           Namespaces:
-            DeskChair: true
-            DeskChair_label: true
-            LookOutSide: true
-            LookOutSide_label: true
-            LowTable: true
-            LowTable_label: true
-            Sofa: true
-            Sofa_label: true
-            TV: true
-            TV_label: true
+            {}
           Topic:
             Depth: 1
             Durability Policy: Volatile
@@ -205,8 +196,7 @@ Visualization Manager:
           Enabled: true
           Name: MPPI Controller
           Namespaces:
-            Candidate Trajectories: true
-            Optimal Trajectory: true
+            {}
           Topic:
             Depth: 5
             Durability Policy: Volatile
@@ -330,6 +320,18 @@ Visualization Manager:
       Update Interval: 0
       Value: true
       Visual Enabled: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: MarkerArray
+      Namespaces:
+        frontiers: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /explore/frontiers
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
