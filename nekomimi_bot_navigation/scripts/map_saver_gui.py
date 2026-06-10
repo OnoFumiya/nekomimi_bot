@@ -32,8 +32,6 @@ def main(args=None):
         r, path = save_map_command(node)
         if r:
             Popen(["ros2", "run", "nav2_map_server", "map_saver_cli", "-f", path])
-            time.sleep(1)
-            Popen(["sed", "-i", "s/free_thresh: 0.25/free_thresh: 0.196/", path + ".yaml"])
     node.execute()
     rclpy.shutdown()
 

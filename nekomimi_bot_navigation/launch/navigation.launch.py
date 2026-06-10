@@ -54,7 +54,7 @@ def generate_launch_description():
     use_gazebo = False
 
     # Customize of Costmaps
-    cost_map = "scan rgbd"
+    cost_map = "scan"
     # "scan rgbd" TODO: out_color objects
 
     # Keepout Filter Map Config
