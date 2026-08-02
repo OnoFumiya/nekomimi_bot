@@ -15,12 +15,48 @@ def generate_launch_description():
     robot_id = 0
     bringup_pkg = robot_name + '_bringup'
 
+    # world_model = 'empty'
+    # world_model = 'wrs'
+    # world_model = 'small_house'
+    world_model = 'multi_floor_cafeteria' # 'rcjo2025_arena'
+
     rviz_config = os.path.join(get_package_share_directory(bringup_pkg), 'rviz', 'gazebo.rviz')
 
+    world_file = ''
+    if world_model == 'empty':
+        world_file = os.path.join(get_package_share_directory(
+            'nekomimi_bot_description'), 
+            'worlds',
+            'empty.sdf'
+        )
+        starting_pose = {"x": 0.0, "y": 0.0, "z": 0.0, "yaw": 0.0}
+    elif world_model == 'wrs':
+        world_file = os.path.join(get_package_share_directory(
+            'tmc_wrs_gz_worlds'), 
+            'worlds',
+            'wrs2020.world.xacro'
+        )
+        starting_pose = {"x": 0.0, "y": 0.0, "z": 0.0, "yaw": 0.0}
+    elif world_model == 'small_house':
+        world_file = os.path.join(get_package_share_directory(
+            'aws_small_house_world'), 
+            'worlds',
+            'small_house.world'
+        )
+        starting_pose = {"x": 0.0, "y": 0.0, "z": 0.0, "yaw": 0.0}
+    else:
+        world_file = os.path.join(get_package_share_directory(
+            'gazebo_worlds'), 
+            'worlds',
+            world_model + '.world.xacro'
+        )
+        if world_model == 'rcjo2025_arena':
+            starting_pose = {"x": -5.5, "y": 1.5, "z": 0.0, "yaw": 3.14}
+        elif world_model == 'multi_floor_cafeteria':
+            starting_pose = {"x": -0.5, "y": 4.375, "z": 0.0, "yaw": 3.14}
+            # starting_pose = {"x": -0.5, "y": 4.375, "z": 3.0, "yaw": 3.14}
 
-    # world_file = os.path.join(get_package_share_directory('gazebo_worlds'), 'worlds', 'rcjo2025_arena.world.xacro')
-    # world_file = os.path.join(get_package_share_directory('gazebo_worlds'), 'worlds', 'robot_cafe_arena.world.xacro')
-    world_file = os.path.join(get_package_share_directory('nekomimi_bot_description'), 'worlds', 'empty.sdf')
+
 
     return LaunchDescription([
         IncludeLaunchDescription(
@@ -59,20 +95,11 @@ def generate_launch_description():
                 'enable_gz' : 'True',
                 'enable_gz_lidar' : 'True',
 
-                # # RCJO2025 Arena
-                # 'robot_coords_x': '-5.5',
-                # 'robot_coords_y': '1.5',
-
-                # # Robot Cafe Arena
-                # 'robot_coords_x': '0.0',
-                # 'robot_coords_y': '-3.0',
-
                 # Empty World
-                'robot_coords_x': '0.0',
-                'robot_coords_y': '0.0',
-
-                'robot_coords_z': '0.0', # z
-                'robot_coords_Y': '0.0', # yaw
+                'robot_coords_x': str(starting_pose["x"]),   # x
+                'robot_coords_y': str(starting_pose["y"]),   # y
+                'robot_coords_z': str(starting_pose["z"]),   # z
+                'robot_coords_Y': str(starting_pose["yaw"]), # yaw
             }.items()
         ),
 
