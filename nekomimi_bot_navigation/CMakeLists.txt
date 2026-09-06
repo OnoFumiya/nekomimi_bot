@@ -10,20 +10,20 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclpy REQUIRED)
-# find_package(geometry_msgs REQUIRED)
-# find_package(tf2_ros REQUIRED)
-# find_package(tf2 REQUIRED)
-# find_package(nav_msgs REQUIRED)
-# find_package(nav2_msgs REQUIRED)
-# find_package(visualization_msgs REQUIRED)
-# find_package(tf2_geometry_msgs REQUIRED)
-# find_package(lifecycle_msgs REQUIRED)
-# find_package(nav2_core REQUIRED)
-# find_package(nav_2d_msgs REQUIRED)
-# find_package(rclcpp_components REQUIRED)
-# find_package(nav_2d_utils REQUIRED)
-# find_package(yaml-cpp REQUIRED)
-# find_package(pluginlib REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(nav2_msgs REQUIRED)
+find_package(visualization_msgs REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
+find_package(lifecycle_msgs REQUIRED)
+find_package(nav2_core REQUIRED)
+find_package(nav_2d_msgs REQUIRED)
+find_package(rclcpp_components REQUIRED)
+find_package(nav_2d_utils REQUIRED)
+find_package(yaml-cpp REQUIRED)
+find_package(pluginlib REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
@@ -38,27 +38,30 @@ install(DIRECTORY
   DESTINATION share/${PROJECT_NAME}
 )
 
-# add_executable(location_tf_broadcaster src/location_tf_broadcaster.cpp)
-# # ament_target_dependencies(location_tf_broadcaster rclcpp geometry_msgs tf2_ros tf2 nav2_msgs visualization_msgs tf2_geometry_msgs yaml-cpp rosidl_default_runtime)
-# target_link_libraries(location_tf_broadcaster
-#   rclcpp::rclcpp
-#   geometry_msgs::geometry_msgs
-#   tf2_ros::tf2_ros
-#   tf2::tf2
-#   ${nav2_msgs_LIBRARIES}
-#   ${visualization_msgs_LIBRARIES}
-#   ${tf2_geometry_msgs_LIBRARIES}
-#   yaml-cpp
-# )
-# install(TARGETS location_tf_broadcaster DESTINATION lib/${PROJECT_NAME})
+add_executable(location_tf_broadcaster src/location_tf_broadcaster.cpp)
+# ament_target_dependencies(location_tf_broadcaster rclcpp geometry_msgs tf2_ros tf2 nav2_msgs visualization_msgs tf2_geometry_msgs yaml-cpp rosidl_default_runtime)
+target_link_libraries(location_tf_broadcaster
+  rclcpp::rclcpp
+  geometry_msgs::geometry_msgs
+  tf2_ros::tf2_ros
+  tf2::tf2
+  nav2_msgs::nav2_msgs
+  visualization_msgs::visualization_msgs
+  tf2_geometry_msgs::tf2_geometry_msgs
+  ${nav2_msgs_LIBRARIES}
+  ${visualization_msgs_LIBRARIES}
+  ${tf2_geometry_msgs_LIBRARIES}
+  yaml-cpp
+)
+install(TARGETS location_tf_broadcaster DESTINATION lib/${PROJECT_NAME})
 
-# add_executable(keyboard_teleop src/keyboard_teleop.cpp)
-# # ament_target_dependencies(keyboard_teleop rclcpp geometry_msgs rosidl_default_runtime)
-# target_link_libraries(keyboard_teleop
-#   rclcpp::rclcpp
-#   geometry_msgs::geometry_msgs
-# )
-# install(TARGETS keyboard_teleop DESTINATION lib/${PROJECT_NAME})
+add_executable(keyboard_teleop src/keyboard_teleop.cpp)
+# ament_target_dependencies(keyboard_teleop rclcpp geometry_msgs rosidl_default_runtime)
+target_link_libraries(keyboard_teleop
+  rclcpp::rclcpp
+  geometry_msgs::geometry_msgs
+)
+install(TARGETS keyboard_teleop DESTINATION lib/${PROJECT_NAME})
 
 # ament_python_install_package(${PROJECT_NAME})
 install(PROGRAMS scripts/location_setting.py DESTINATION lib/${PROJECT_NAME})

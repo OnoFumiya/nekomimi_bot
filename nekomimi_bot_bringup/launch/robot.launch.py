@@ -299,11 +299,11 @@ def launch_gz(context, *args, **kwargs):
                     on_exit=[move_base_node],
                 )
             ),
-            RegisterEventHandler(
-                event_handler=OnProcessExit(
-                    target_action=joint_state_broadcaster,
-                    on_exit=[library_server_launch],
-                )
-            ),
+            # RegisterEventHandler(
+            #     event_handler=OnProcessExit(
+            #         target_action=joint_state_broadcaster,
+            #         on_exit=[library_server_launch],
+            #     )
+            # ),
             robot_state_publisher_node,
         ]

@@ -69,13 +69,17 @@ bt_navigator:
     # Built-in plugins are added automatically
     # plugin_lib_names: []
 
-    error_code_names:
-      - compute_path_error_code
-      - follow_path_error_code
+    # error_code_names:
+    #   - compute_path_error_code
+    #   - follow_path_error_code
+    error_code_name_prefixes:
+      - compute_path
+      - follow_path
 
 controller_server:
   ros__parameters:
     use_sim_time: False
+    odom_topic: /nekomimi_bot/odom
     controller_frequency: 10.0
     costmap_update_timeout: 0.30
     min_x_velocity_threshold: 0.03
@@ -123,16 +127,18 @@ controller_server:
       wz_max: 3.0
       iteration_count: 1
       prune_distance: 2.3
-      transform_tolerance: 0.1
+      transform_tolerance: 0.5
       temperature: 0.3
       gamma: 0.015
-      motion_model: "DiffDrive"
+      motion_model: "diff_drive"
       # motion_model: "Omni"
       visualize: true
       regenerate_noises: true
       TrajectoryVisualizer:
         trajectory_step: 5
         time_step: 3
+      diff_drive:
+        plugin: "mppi::DiffDriveMotionModel"
       AckermannConstraints:
         min_turning_r: 0.2
       critics: [
@@ -262,7 +268,7 @@ global_costmap:
       publish_frequency: 1.0
       global_frame: map
       robot_base_frame: nekomimi_bot/base_footprint
-      robot_radius: 0.13
+      robot_radius: 0.1
       resolution: 0.05
       track_unknown_space: true
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
@@ -365,7 +371,7 @@ behavior_server:
     local_frame: nekomimi_bot/odom
     global_frame: map
     robot_base_frame: nekomimi_bot/base_footprint
-    transform_tolerance: 0.1
+    transform_tolerance: 0.5
     simulate_ahead_time: 2.0
     max_rotational_vel: 1.0
     min_rotational_vel: 0.4
@@ -410,6 +416,7 @@ route_server:
 velocity_smoother:
   ros__parameters:
     use_sim_time: False
+    enable_stamped_cmd_vel: false
     smoothing_frequency: 10.0
     stamp_smoothed_velocity_with_smoothing_time: False
     scale_velocities: False
@@ -426,12 +433,13 @@ velocity_smoother:
 collision_monitor:
   ros__parameters:
     use_sim_time: False
+    enable_stamped_cmd_vel: false
     base_frame_id: "nekomimi_bot/base_footprint"
     odom_frame_id: "nekomimi_bot/odom"
     cmd_vel_in_topic: "cmd_vel_smoothed"
     cmd_vel_out_topic: "cmd_vel"
     state_topic: "collision_monitor_state"
-    transform_tolerance: 0.2
+    transform_tolerance: 0.5
     source_timeout: 1.0
     base_shift_correction: True
     stop_pub_timeout: 2.0
@@ -458,6 +466,7 @@ collision_monitor:
 docking_server:
   ros__parameters:
     use_sim_time: False
+    odom_topic: /nekomimi_bot/odom
     controller_frequency: 50.0
     initial_perception_timeout: 5.0
     wait_charge_timeout: 5.0
@@ -504,7 +513,7 @@ docking_server:
       use_collision_detection: true
       costmap_topic: "local_costmap/costmap_raw"
       footprint_topic: "local_costmap/published_footprint"
-      transform_tolerance: 0.1
+      transform_tolerance: 0.5
       projection_time: 5.0
       simulation_step: 0.1
       dock_collision_threshold: 0.3

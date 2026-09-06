@@ -137,12 +137,12 @@ sudo apt-get install -y \
 
 # Install Navigation package
 sudo apt install -y \
-    ros-$ROS_DISTRO-rmw-cyclonedds-cpp
-    # ros-$ROS_DISTRO-navigation2 \   # TODO: Release Lyrical version is not available yet
-    # ros-$ROS_DISTRO-nav2-bringup \  # Same as above
-    # ros-$ROS_DISTRO-nav2-map-server \ # Same as above
-    # ros-$ROS_DISTRO-nav2-lifecycle-manager \ # Same as above
-    # ros-$ROS_DISTRO-slam-toolbox \ # Same as above
+    ros-$ROS_DISTRO-rmw-cyclonedds-cpp \
+    ros-$ROS_DISTRO-navigation2 \
+    ros-$ROS_DISTRO-nav2-bringup \
+    ros-$ROS_DISTRO-nav2-map-server \
+    ros-$ROS_DISTRO-nav2-lifecycle-manager \
+    ros-$ROS_DISTRO-slam-toolbox
 
 echo export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp >> ~/.bashrc
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp

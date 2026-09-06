@@ -9,10 +9,10 @@
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <geometry_msgs/msg/quaternion.hpp>
 
-#include <tf2_ros/transform_broadcaster.h>
-#include <tf2_ros/static_transform_broadcaster.h>
-#include <tf2/LinearMath/Quaternion.h>
-#include <tf2/LinearMath/Matrix3x3.h>
+#include <tf2_ros/transform_broadcaster.hpp>
+#include <tf2_ros/static_transform_broadcaster.hpp>
+#include <tf2/LinearMath/Quaternion.hpp>
+#include <tf2/LinearMath/Matrix3x3.hpp>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 
 #include <nav2_msgs/srv/set_initial_pose.hpp>
@@ -264,7 +264,7 @@ void LocationFileViewer::timer_callback() {
 }
 
 
-LocationFileViewer::LocationFileViewer() : Node("location_file_viewer"), dynamic_tfBroadcaster_(this), static_tfBroadcaster_(this) {
+LocationFileViewer::LocationFileViewer() : Node("location_file_viewer"), dynamic_tfBroadcaster_(*this), static_tfBroadcaster_(*this) {
     sub_location_file_path_ = this->create_subscription<std_msgs::msg::String>("/location_file_path", 1, std::bind(&LocationFileViewer::callback_file_path, this, std::placeholders::_1));
     sub_global_path_ = this->create_subscription<nav_msgs::msg::Path>("/plan", 1, std::bind(&LocationFileViewer::callback_global_path, this, std::placeholders::_1));
     pub_marker_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("location_arrows", 1);

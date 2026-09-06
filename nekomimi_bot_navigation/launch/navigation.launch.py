@@ -314,18 +314,19 @@ def generate_launch_description():
         parameters=[{"location_file_path": location_yaml_file,}],
     )
 
-    flex_nav_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'launch', 'include', 'flex_nav.launch.py')
-        ),
-        condition=IfCondition(use_flex_nav),
-        launch_arguments={'use_sim_time': use_sim_time,}.items(),
-    )
+    # flex_nav_cmd = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource(
+    #         os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'launch', 'include', 'flex_nav.launch.py')
+    #     ),
+    #     condition=IfCondition(use_flex_nav),
+    #     launch_arguments={'use_sim_time': use_sim_time,}.items(),
+    # )
 
     rviz_cmd = Node(
         package='rviz2',
         executable='rviz2',
         arguments=['-d', os.path.join(get_package_share_directory('nekomimi_bot_navigation'), 'rviz', 'navigation.rviz')],
+        parameters=[{"use_sim_time": use_sim_time}],
         condition=IfCondition(use_rviz)
     )
 
@@ -361,7 +362,7 @@ def generate_launch_description():
     # Add the actions to launch all of the navigation nodes
     ld.add_action(bringup_cmd_group)
     ld.add_action(tf_broadcaster_cmd)  # Customize
-    ld.add_action(flex_nav_cmd)  # Customize
+    # ld.add_action(flex_nav_cmd)  # Customize
     ld.add_action(rviz_cmd)  # Customize
 
     return ld
