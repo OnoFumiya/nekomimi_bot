@@ -5,6 +5,14 @@ move_to_pose:
         pose_name: {"type": "string", "name": "指定ポーズ"}
         time_allowance: {"type": "time", "name": "時間"}
 
+move_joint:
+    msg_type: "nekomimi_bot_interfaces/MoveJoint"
+    mode: "action"
+    value_rules:
+        target_joint_names[2]: {"type": "string", "name": "指定関節名"}
+        target_joint_rad[2]: {"type": "deg", "name": "関節角度"}
+        time_allowance: {"type": "time", "name": "時間"}
+
 move_wheel_linear:
     msg_type: "nekomimi_bot_interfaces/MoveWheelLinear"
     mode: "action"
