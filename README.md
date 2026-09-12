@@ -24,8 +24,10 @@
     <li>
       <a href="#操作方法">操作方法</a>
       <ul>
-        <li><a href="#rviz上の可視化">Rviz上の可視化</a></li>
+        <li><a href="#ホストPC(Jetson)">ホストPC(Jetson)</a></li>
+        <li><a href="#ローカルPC">ローカルPC</a></li>
       </ul>
+      <a href="#rviz上の可視化">rviz上の可視化</a>
     </li>
     <li>
       <a href="#ソフトウェア">ソフトウェア</a>
@@ -51,7 +53,7 @@
 </details>
 
 ## 概要
-![NEKOMIMI BOT](nekomimi_bot.png)
+![NEKOMIMI BOT](img/nekomimi_bot.png)
 
 NekoMimi Botを動かすためのライブラリ．
 
@@ -76,7 +78,7 @@ NekoMimi Botを動かすためのライブラリ．
 
 2. 本レポジトリをcloneします．
    ```sh
-   git clone -b feature/multi_control https://github.com/TeamSOBITS/nekomimi_bot
+   git clone -b humble-devel https://github.com/OnoFumiya/nekomimi_bot
    ```
 3. レポジトリの中へ移動します．
    ```sh
@@ -94,7 +96,8 @@ NekoMimi Botを動かすためのライブラリ．
     ```
 
 ## 操作方法
-
+### ホストPC(Jetson)
+### ローカルPC
 1. [real_minimal.launch](nekomimi_bot_bringup/launch/real_minimal.launch.py)というlaunchファイルを起動します．
    ```sh
    ros2 launch nekomimi_bot_bringup real_minimal.launch.py
@@ -106,8 +109,9 @@ NekoMimi Botを動かすためのライブラリ．
       sec: 5
       nanosec: 0"
    ```
+   <!-- 2番についてはホストPC(Jetson)でもローカルPCでもどちらでも可能 -->
 
-### Rviz上の可視化
+## Rviz上の可視化
 実機を動かす前段階で，Rviz上でNekoMimi Botを可視化し，ロボットの構成を表示することができます．
 
 ```sh
@@ -116,7 +120,7 @@ ros2 launch nekomimi_bot_description display.launch.py
 
 正常に動作した場合は，次のようにRvizが表示されます．
 
-![NekoMimi Bot Display with Rviz](nekomimi_bot/docs/img//nekomimi_bot_display.png)
+![NekoMimi Bot Display with Rviz](img/nekomimi_bot_display.png)
 
 ## ソフトウェア
 <details>
@@ -126,8 +130,8 @@ ros2 launch nekomimi_bot_description display.launch.py
 
 1. `/nekomimi_bot/move_joint`：指定した関節を指定した角度に動かす
    ```sh
-   ros2 action send_goal /nekomimi_bot/move_joint nekomimi_bot_interfaces/action/MoveJoint "target_joint_names: ['head_camera_pan_joint', 'l_arm_shoulder_pan_joint']
-   target_joint_rad: [0.5, -0.7]
+   ros2 action send_goal /nekomimi_bot/move_joint nekomimi_bot_interfaces/action/MoveJoint "target_joint_names: ['head_tilt_joint', 'head_pan_joint']
+   target_joint_rad: [0.78, -0.2]
    time_allowance:
       sec: 5
       nanosec: 0"
@@ -137,19 +141,8 @@ ros2 launch nekomimi_bot_description display.launch.py
 
    | ジョイント名 |
    | :--- |
-   | r_arm_shoulder_roll_joint |
-   | r_arm_shoulder_pan_joint |
-   | r_arm_elbow_tilt_joint |
-   | r_arm_wrist_tilt_joint |
-   | r_hand_joint |
-   | l_arm_shoulder_roll_joint |
-   | l_arm_shoulder_pan_joint |
-   | l_arm_elbow_tilt_joint |
-   | l_arm_wrist_tilt_joint |
-   | l_hand_joint |
-   | body_roll_joint |
-   | head_camera_pan_joint |
-   | head_camera_tilt_joint |
+   | head_pan_joint |
+   | head_tilt_joint |
 
 2. `/nekomimi_bot/move_to_pose`：事前に指定したポーズに動かす
    ```sh
@@ -164,8 +157,8 @@ ros2 launch nekomimi_bot_description display.launch.py
 1. `/nekomimi_bot/move_wheel_linear`：指定した速度でロボットを移動させる
    ```sh
    ros2 action send_goal /nekomimi_bot/move_wheel_linear nekomimi_bot_interfaces/action/MoveWheelLinear "target_point:
-      x: 0.5
-      y: 0.0
+      x: 1.0
+      y: -0.5
       z: 0.0
    time_allowance:
       sec: 3
@@ -191,38 +184,27 @@ ros2 launch nekomimi_bot_description display.launch.py
       - initial_pose
 
     initial_pose:
-      r_arm_shoulder_roll :  0.0
-      r_arm_shoulder_pan  :  1.25
-      r_arm_elbow_tilt    :  0.0
-      r_arm_wrist_tilt    :  0.0
-      r_hand              :  0.0
-      l_arm_shoulder_roll :  0.0
-      l_arm_shoulder_pan  : -1.25
-      l_arm_elbow_tilt    :  0.0
-      l_arm_wrist_tilt    :  0.0
-      l_hand              :  0.0
-      body_roll           :  0.0
-      head_camera_pan     :  0.0
-      head_camera_tilt    :  0.0
+      head_pan  :  0.0
+      head_tilt :  0.0
 ```
 </details>
 
 ## ハードウェア
 
-NekoMimi Botはオープンソースハードウェアとして [Onshape](https://cad.onshape.com/documents/8875b6e7a5f6f87b4f951969/w/d265c3a1708d61e2a005595d/e/00fdacbdb703dc27e5e0d3f8) にて公開しております．
+NekoMimi Botはオープンソースハードウェアとして [Onshape](https://cad.onshape.com/documents/a085ea4db45b14d2ae110243/w/7ac4cf7de5a48b62c0d544c0/e/fe620bf9906d8a5ba8b4f91b?renderMode=0&uiState=6a11eb768d8f51332c48bb29) にて公開しております．
 
-![NekoMimi Bot in OnShape](nekomimi_bot/docs/img/nekomimi_bot_onshape.png)
+![NekoMimi Bot in OnShape](img/nekomimi_bot_onshape.png)
 
 <details>
 <summary>ハードウェアの詳細についてはこちらを確認してください．</summary>
 
 ### パーツのダウンロード方法
 
-1. Onshapeにアクセスしましょう．
-2. `Instance`の中にパーツを右クリックで選択します．
-3. 一覧が表示され，`Export`ボタンを押してください．
-4. 表示されたウィンドウの中に，`Format`という項目があります．`STEP`を選択してください．
-5. 最後に，青色の`Export`ボタンを押してダウンロードが開始されます．
+1. Onshapeにアクセス．
+2. `Instance`の中にパーツを右クリックで選択．
+3. 一覧が表示され，`Export`ボタンを押す．
+4. 表示されたウィンドウの中に，`Format`という項目があるので，`STEP`を選択．
+5. 青色の`Export`ボタンを押してダウンロード開始．
 
 ### 電子回路図
 TBD
@@ -231,41 +213,41 @@ TBD
 TBD
 
 ### ロボットの特徴
-
-| 項目 | 詳細 |
-| --- | --- |
-| 最大直進速度 | 0.65[m/s] |
-| 最大回転速度 | 3.1415[rad/s] |
-| 最大ペイロード | 0.35[kg] |
-| サイズ (長さx幅x高さ) | 512x418x1122[mm] |
-| 重量 | 11.6[kg] |
-| リモートコントローラ | PS3/PS4 |
-| LiDAR | UST-10LX |
-| RGB-D | Intel Realsense D435F |
-| スピーカー | モノラルスピーカー |
-| マイク | コンデンサーマイク |
-| アクチュエータ (アーム) | 2 x XM540-W150, 9 x XM430-W320 |
-| 移動機構 | TurtleBot2 |
-| 電源 | 2 x Makita 6.0Ah 18V |
-| PC接続 | USB |
+TBD
+<!-- | 項目 | 詳細 | -->
+<!-- | --- | --- | -->
+<!-- | 最大直進速度 | 0.65[m/s] | -->
+<!-- | 最大回転速度 | 3.1415[rad/s] | -->
+<!-- | 最大ペイロード | 0.35[kg] | -->
+<!-- | サイズ (長さx幅x高さ) | 512x418x1122[mm] | -->
+<!-- | 重量 | 11.6[kg] | -->
+<!-- | リモートコントローラ | PS3/PS4 | -->
+<!-- | LiDAR | UST-10LX | -->
+<!-- | RGB-D | Intel Realsense D435F | -->
+<!-- | スピーカー | モノラルスピーカー | -->
+<!-- | マイク | コンデンサーマイク | -->
+<!-- | アクチュエータ (アーム) | 2 x XM540-W150, 9 x XM430-W320 | -->
+<!-- | 移動機構 | TurtleBot2 | -->
+<!-- | 電源 | 2 x Makita 6.0Ah 18V | -->
+<!-- | PC接続 | USB | -->
 
 ### 部品リスト（BOM）
-
-| 部品 | 型番 | 個数 | 購入先 |
-| --- | --- | --- | --- |
-| --- | --- | 1 | [link]() |
-| --- | --- | 1 | [link]() |
-| --- | --- | 1 | [link]() |
-| --- | --- | 1 | [link]() |
-| --- | --- | 1 | [link]() |
-| --- | --- | 1 | [link]() |
-| --- | --- | 1 | [link]() |
-| --- | --- | 1 | [link]() |
-| --- | --- | 1 | [link]() |
-| --- | --- | 1 | [link]() |
-| --- | --- | 1 | [link]() |
-| --- | --- | 1 | [link]() |
-| --- | --- | 1 | [link]() |
+TBD
+<!-- | 部品 | 型番 | 個数 | 購入先 | -->
+<!-- | --- | --- | --- | --- | -->
+<!-- | --- | --- | 1 | [link]() | -->
+<!-- | --- | --- | 1 | [link]() | -->
+<!-- | --- | --- | 1 | [link]() | -->
+<!-- | --- | --- | 1 | [link]() | -->
+<!-- | --- | --- | 1 | [link]() | -->
+<!-- | --- | --- | 1 | [link]() | -->
+<!-- | --- | --- | 1 | [link]() | -->
+<!-- | --- | --- | 1 | [link]() | -->
+<!-- | --- | --- | 1 | [link]() | -->
+<!-- | --- | --- | 1 | [link]() | -->
+<!-- | --- | --- | 1 | [link]() | -->
+<!-- | --- | --- | 1 | [link]() | -->
+<!-- | --- | --- | 1 | [link]() | -->
 
 </details>
 
@@ -274,17 +256,18 @@ TBD
 現時点のバッグや新規機能の依頼を確認するために[Issueページ][issues-url] をご覧ください．
 
 ## 参考文献
-<!-- * [Dynamixel SDK](https://emanual.robotis.com/docs/en/software/dynamixel/dynamixel_sdk/overview/)
-* [ROS Noetic](http://wiki.ros.org/noetic)
-* [ROS Control](http://wiki.ros.org/ros_control) -->
+* [ROS2 Humble](http://wiki.ros.org/humble)
+* [ROS2 Control](http://wiki.ros.org/ros2_control)
+* [ROS2 Control Gazebo](https://github.com/ros-controls/gz_ros2_control)
+* [Feetech ROS2 Driver](https://github.com/ros-physical-ai/feetech_ros2_driver)
 
-[contributors-shield]: https://img.shields.io/github/contributors/TeamSOBITS/nekomimi_bot.svg?style=for-the-badge
-[contributors-url]: https://github.com/TeamSOBITS/nekomimi_bot/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/TeamSOBITS/nekomimi_bot.svg?style=for-the-badge
-[forks-url]: https://github.com/TeamSOBITS/nekomimi_bot/network/members
-[stars-shield]: https://img.shields.io/github/stars/TeamSOBITS/nekomimi_bot.svg?style=for-the-badge
-[stars-url]: https://github.com/TeamSOBITS/nekomimi_bot/stargazers
-[issues-shield]: https://img.shields.io/github/issues/TeamSOBITS/nekomimi_bot.svg?style=for-the-badge
-[issues-url]: https://github.com/TeamSOBITS/nekomimi_bot/issues
-[license-shield]: https://img.shields.io/github/license/TeamSOBITS/nekomimi_bot.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/OnoFumiya/nekomimi_bot.svg?style=for-the-badge
+[contributors-url]: https://github.com/OnoFumiya/nekomimi_bot/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/OnoFumiya/nekomimi_bot.svg?style=for-the-badge
+[forks-url]: https://github.com/OnoFumiya/nekomimi_bot/network/members
+[stars-shield]: https://img.shields.io/github/stars/OnoFumiya/nekomimi_bot.svg?style=for-the-badge
+[stars-url]: https://github.com/OnoFumiya/nekomimi_bot/stargazers
+[issues-shield]: https://img.shields.io/github/issues/OnoFumiya/nekomimi_bot.svg?style=for-the-badge
+[issues-url]: https://github.com/OnoFumiya/nekomimi_bot/issues
+[license-shield]: https://img.shields.io/github/license/OnoFumiya/nekomimi_bot.svg?style=for-the-badge
 [license-url]: LICENSE
