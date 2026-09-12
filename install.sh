@@ -153,6 +153,23 @@ sudo apt install -y \
     zenity \
     xterm
 
+
+# Copy the `Description` file to the directory with the matching username so that you can receive URDF topics from Jetson.
+usernames=(
+    "jetson"
+)
+
+# Create the directory and copy the files for each user
+for ((i = 0; i < ${#usernames[@]}; i++)) {
+    # Execute only when it's not me
+    if [ "${usernames[i]}" != "$USERNAME" ]; then
+        cd ${DIR}
+        sudo mkdir -p /home/${usernames[i]}/colcon_ws/install/nekomimi_bot_description/share/nekomimi_bot_description
+        sudo cp -a nekomimi_bot_description/. /home/${usernames[i]}/colcon_ws/install/nekomimi_bot_description/share/nekomimi_bot_description/
+    fi
+}
+
+
 # Set up environment variables
 echo "" >> /home/$USERNAME/.bashrc
 echo "# NekoMimi Bot environment variables" >> /home/$USERNAME/.bashrc
