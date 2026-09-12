@@ -258,6 +258,8 @@ TBD
 ## 参考文献
 * [ROS2 Lyrical](http://wiki.ros.org/lyrical)
 * [ROS2 Control](http://wiki.ros.org/ros2_control)
+* [ROS2 Control Gazebo](https://github.com/ros-controls/gz_ros2_control)
+* [Feetech ROS2 Driver](https://github.com/ros-physical-ai/feetech_ros2_driver)
 
 [contributors-shield]: https://img.shields.io/github/contributors/OnoFumiya/nekomimi_bot.svg?style=for-the-badge
 [contributors-url]: https://github.com/OnoFumiya/nekomimi_bot/graphs/contributors
