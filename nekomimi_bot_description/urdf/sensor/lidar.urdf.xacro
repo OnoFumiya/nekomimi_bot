@@ -14,7 +14,7 @@
       <visual>
         <origin xyz="0.0 0.0 -0.02215" rpy="0.0 0.0 0.0" />
         <geometry>
-          <mesh filename="file://$(find nekomimi_bot_description)/meshes/sensor/lds_lidar.stl" scale="0.001 0.001 0.001" />
+          <mesh filename="package://nekomimi_bot_description/meshes/sensor/lds_lidar.stl" scale="0.001 0.001 0.001" />
         </geometry>
         <material name="dark_grey" />
       </visual>

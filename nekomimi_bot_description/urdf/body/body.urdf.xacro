@@ -13,7 +13,7 @@
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2}" />
         <geometry>
-          <mesh filename="file://$(find nekomimi_bot_description)/meshes/body/body_core.stl" scale="0.001 0.001 0.001" />
+          <mesh filename="package://nekomimi_bot_description/meshes/body/body_core.stl" scale="0.001 0.001 0.001" />
         </geometry>
         <material name="black" />
       </visual>
@@ -48,7 +48,7 @@
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2}" />
         <geometry>
-          <mesh filename="file://$(find nekomimi_bot_description)/meshes/body/body_cover.stl" scale="0.001 0.001 0.001" />
+          <mesh filename="package://nekomimi_bot_description/meshes/body/body_cover.stl" scale="0.001 0.001 0.001" />
         </geometry>
         <material name="black" />
       </visual>

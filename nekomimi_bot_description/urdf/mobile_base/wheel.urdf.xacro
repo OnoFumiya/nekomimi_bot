@@ -16,7 +16,7 @@
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${pose_yaw}" />
         <geometry>
-          <mesh filename="file://$(find nekomimi_bot_description)/meshes/mobile_base/wheel.stl" scale="0.001 0.001 0.001" />
+          <mesh filename="package://nekomimi_bot_description/meshes/mobile_base/wheel.stl" scale="0.001 0.001 0.001" />
         </geometry>
         <material name="wheel" />
       </visual>

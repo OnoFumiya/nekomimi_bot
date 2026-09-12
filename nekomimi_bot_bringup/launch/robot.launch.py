@@ -1,4 +1,5 @@
 import os
+import subprocess
 from ament_index_python.packages import get_package_share_directory
 
 from launch_ros.actions import Node
@@ -57,7 +58,7 @@ def launch_gz(context, *args, **kwargs):
         lds_sl_port = str(os.environ.get('LDS_SL_PORT'))
         print('HLDS Serial Port : ' + lds_sl_port)
 
-    robot_description = os.path.join(get_package_share_directory(
+    robot_description_path = os.path.join(get_package_share_directory(
         'nekomimi_bot_description'), 
         'robots',
         'nekomimi_bot_robot.urdf.xacro'
@@ -69,14 +70,14 @@ def launch_gz(context, *args, **kwargs):
         'wheel_controller.yaml'
     )
 
-    robot_description_config = xacro.process_file(
-        robot_description,
-        mappings={
-            'enable_gz'      : enable_gz,
-            'robot_name'     : robot_name,
-            'enable_gz_lidar': enable_gz_lidar,
-            'ftc_sl_port'    : ftc_sl_port,
-        })
+    xacro_args = [
+        'xacro', robot_description_path,
+        f'enable_gz:={enable_gz}',
+        f'robot_name:={robot_name}',
+        f'enable_gz_lidar:={enable_gz_lidar}',
+        f'ftc_sl_port:={ftc_sl_port}'
+    ]
+    robot_description = subprocess.check_output(xacro_args).decode('utf-8')
 
     controller_config = os.path.join(get_package_share_directory(
         'nekomimi_bot_bringup'),
@@ -90,7 +91,7 @@ def launch_gz(context, *args, **kwargs):
             executable="ros2_control_node",
             namespace=robot_name,
             parameters=[
-                {"robot_description": robot_description_config.toxml()}, controller_config],
+                {"robot_description": robot_description}, controller_config],
             output="screen",
         )
 
@@ -179,7 +180,7 @@ def launch_gz(context, *args, **kwargs):
         namespace=robot_name,
         parameters=[
             {"frame_prefix": robot_name + '/'},
-            {"robot_description": robot_description_config.toxml()},
+            {"robot_description": robot_description},
             {"use_sim_time": True if enable_gz == 'True' else False},
         ],
         output="screen",

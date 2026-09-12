@@ -14,7 +14,7 @@
       <visual>
         <origin xyz="-0.00007 -0.009 ${0.021-0.021}" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
         <geometry>
-          <mesh filename="file://$(find nekomimi_bot_description)/meshes/sensor/realsense_d405.stl" scale="0.001 0.001 0.001" />
+          <mesh filename="package://nekomimi_bot_description/meshes/sensor/realsense_d405.stl" scale="0.001 0.001 0.001" />
         </geometry>
         <material name="grey" />
       </visual>
