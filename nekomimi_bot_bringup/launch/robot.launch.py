@@ -112,19 +112,19 @@ def launch_gz(context, *args, **kwargs):
             }.items(),
         )
 
-        # realsense_node = IncludeLaunchDescription(
-        #     PythonLaunchDescriptionSource([
-        #         PathJoinSubstitution([
-        #             FindPackageShare('nekomimi_bot_bringup'),
-        #             'launch',
-        #             'rs.launch.py'
-        #         ])
-        #     ]),
-        #     launch_arguments={
-        #         'camera_namespace': robot_name,
-        #         'tf_prefix' : robot_name + "/",
-        #     }.items(),
-        # )
+        realsense_node = IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([
+                PathJoinSubstitution([
+                    FindPackageShare('nekomimi_bot_bringup'),
+                    'launch',
+                    'rs.launch.py'
+                ])
+            ]),
+            launch_arguments={
+                'camera_namespace': robot_name,
+                'tf_prefix' : robot_name + "/",
+            }.items(),
+        )
 
     joint_state_broadcaster = Node(
         package='controller_manager',
@@ -208,6 +208,10 @@ def launch_gz(context, *args, **kwargs):
         parameters=[
             wheel_controller_config,
             {"use_sim_time": True if enable_gz == 'True' else False},
+            {"pc_battery_topic": "/battery_state"},
+            # {"pc_battery_topic": ""},
+            {"dummy_battery_value": 100},
+            # {"dummy_battery_value": -1},
         ],
         output="screen",
     )
@@ -251,7 +255,7 @@ def launch_gz(context, *args, **kwargs):
             velocity_controller,
             robot_state_publisher_node,
             lidar_node,
-            # realsense_node,
+            realsense_node,
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=joint_state_broadcaster,

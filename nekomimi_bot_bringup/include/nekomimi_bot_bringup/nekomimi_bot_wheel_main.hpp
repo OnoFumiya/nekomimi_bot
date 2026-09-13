@@ -17,8 +17,7 @@
 
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
-// #include <ament_index_cpp/get_package_share_directory.hpp> // (C++18)
-#include <ament_index_cpp/get_package_share_path.hpp>      // (C++20)
+#include <ament_index_cpp/get_package_share_path.hpp>
 
 #include "nekomimi_bot_bringup/nekomimi_bot_wheel_control.hpp"
 #include "nekomimi_bot_bringup/nekomimi_bot_wheel_odometry.hpp"
@@ -54,6 +53,7 @@ private:
   std_msgs::msg::Float64MultiArray wheel_joint_vel;
 
   // Battery Info
+  std::string battery_topic_name;
   sensor_msgs::msg::BatteryState battery_value;
 
   std::map<std::string, double> joints_pos;

@@ -14,9 +14,9 @@ ros_packages=(
     # "realsense_ros" # TODO: Release Lyrical version is not available yet
     "tts_ros"
     "stt_ros"
+    "blockly_ros2"
     "2d_lidar_person_detection"
     "gazebo_worlds"
-    "blockly_ros2"
 )
 
 #Clone all packages

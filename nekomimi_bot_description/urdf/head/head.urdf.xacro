@@ -41,7 +41,7 @@
       <parent link="${parent}" />
       <child link="${prefix}_link" />
       <axis xyz="0.0 0.0 1.0 " />
-      <limit lower="${-M_PI/2}" upper="${M_PI/2}" effort="4.1" velocity="4.796165" />
+      <limit lower="${-M_PI/2}" upper="${M_PI}" effort="4.1" velocity="4.796165" />
     </joint>
 
     <link name="${prefix}_link">
@@ -70,7 +70,7 @@
       <parent link="${parent}" />
       <child link="${prefix}_link" />
       <axis xyz="0.0 1.0 0.0 " />
-      <limit lower="${-M_PI/2}" upper="${M_PI/2}" effort="4.1" velocity="4.796165" />
+      <limit lower="${-2*M_PI/3}" upper="${2*M_PI/3}" effort="4.1" velocity="4.796165" />
     </joint>
 
     <link name="${prefix}_link">

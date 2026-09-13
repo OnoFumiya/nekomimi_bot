@@ -40,12 +40,14 @@ local_parameters = [{'name': 'camera_name',                  'default': 'head_ca
                     {'name': 'enable_color',                 'default': 'true', 'description': 'enable color stream'},
                     {'name': 'enable_depth',                 'default': 'true', 'description': 'enable depth stream'},
                     {'name': 'pointcloud.enable',            'default': 'true', 'description': 'enable pointcloud'},
-                    {'name': 'pointcloud.ordered_pc',        'default': 'false', 'description': 'pointcloud ordered pc'},
+                    {'name': 'pointcloud.ordered_pc',        'default': 'true', 'description': 'pointcloud ordered pc'},
+                    {'name': 'pointcloud__neon_.enable',     'default': 'true', 'description': 'enable pointcloud'},
+                    {'name': 'pointcloud__neon_.ordered_pc', 'default': 'true', 'description': 'pointcloud ordered pc'},
                     {'name': 'tf_prefix',                    'default': 'nekomimi_bot/', 'description': 'prefix to be prepended to all frame IDs'},
-                    {'name': 'rgb_camera.color_profile',     'default': '640x480x5', 'description': 'color stream profile'},
-                    {'name': 'depth_module.depth_profile',   'default': '640x480x5', 'description': 'depth stream profile'},
-                    {'name': 'depth_module.infra_profile',   'default': '640x480x5', 'description': 'infra streams (0/1/2) profile'},
-                    {'name': 'depth_module.color_profile',   'default': '640x480x5', 'description': 'Depth module color stream profile for d405'},
+                    # {'name': 'rgb_camera.color_profile',     'default': '640x480x5', 'description': 'color stream profile'},
+                    # {'name': 'depth_module.depth_profile',   'default': '640x480x5', 'description': 'depth stream profile'},
+                    # {'name': 'depth_module.infra_profile',   'default': '640x480x5', 'description': 'infra streams (0/1/2) profile'},
+                    # {'name': 'depth_module.color_profile',   'default': '640x480x5', 'description': 'Depth module color stream profile for d405'},
                    ]
 
 def to_urdf(xacro_path, parameters=None):
