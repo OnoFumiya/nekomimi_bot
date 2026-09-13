@@ -16,6 +16,7 @@ ros_packages=(
     "stt_ros"
     "2d_lidar_person_detection"
     "gazebo_worlds"
+    "blockly_ros2"
 )
 
 #Clone all packages
@@ -154,27 +155,11 @@ sudo apt install -y \
     xterm
 
 
-# Copy the `Description` file to the directory with the matching username so that you can receive URDF topics from Jetson.
-usernames=(
-    "jetson"
-)
-
-# Create the directory and copy the files for each user
-for ((i = 0; i < ${#usernames[@]}; i++)) {
-    # Execute only when it's not me
-    if [ "${usernames[i]}" != "$USERNAME" ]; then
-        cd ${DIR}
-        sudo mkdir -p /home/${usernames[i]}/colcon_ws/install/nekomimi_bot_description/share/nekomimi_bot_description
-        sudo cp -a nekomimi_bot_description/. /home/${usernames[i]}/colcon_ws/install/nekomimi_bot_description/share/nekomimi_bot_description/
-    fi
-}
-
-
 # Set up environment variables
 echo "" >> /home/$USERNAME/.bashrc
 echo "# NekoMimi Bot environment variables" >> /home/$USERNAME/.bashrc
-echo "export FTC_SL_PORT=`realpath /dev/serial/by-id/usb-1a86_USB_Serial-if00-port0`" >> /home/$USERNAME/.bashrc
-echo "export LDS_SL_PORT=`realpath /dev/serial/by-id/usb-Silicon_Labs_CP2102_USB_to_UART_Bridge_Controller_0001-if00-port0`" >> /home/$USERNAME/.bashrc
+echo "export FTC_SL_PORT=/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0" >> /home/$USERNAME/.bashrc
+echo "export LDS_SL_PORT=/dev/serial/by-id/usb-Silicon_Labs_CP2102_USB_to_UART_Bridge_Controller_0001-if00-port0" >> /home/$USERNAME/.bashrc
 echo "" >> /home/$USERNAME/.bashrc
 source /home/$USERNAME/.bashrc
 
