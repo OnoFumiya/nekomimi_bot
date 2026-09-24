@@ -71,13 +71,13 @@ def generate_launch_description():
 
     ui_bringup_arg = DeclareLaunchArgument(
         "web_teleop_ui_bringup",
-        default_value="True",
+        default_value="False",
         description="turn on the default engine for UI window (Blockly site)"
     )
 
     qrcode_view_arg = DeclareLaunchArgument(
         "web_teleop_qrcode_view",
-        default_value="True",
+        default_value="False",
         description="turn on the RQT Image View for QRcode.",
     )
 
