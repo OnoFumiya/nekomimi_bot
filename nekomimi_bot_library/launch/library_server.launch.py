@@ -81,6 +81,19 @@ def generate_launch_description():
         }.items(),
     )
 
+    teleop_node = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('nekomimi_bot_library'),
+                'launch',
+                'web_teleop.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'web_teleop_namespace': LaunchConfiguration('robot_name'),
+        }.items(),
+    )
+
     return LaunchDescription([
         arg_robot_name,
         arg_enable_gz,
@@ -89,4 +102,5 @@ def generate_launch_description():
         tts_node,
         stt_node,
         blockly_node,
+        teleop_node,
     ])
