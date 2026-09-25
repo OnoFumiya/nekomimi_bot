@@ -74,7 +74,8 @@ def generate_launch_description():
         ),
         launch_arguments={
             "namespace": "ssd_ros",
-            "execute_default": execute_default,
+            "auto_configure": execute_default,
+            "auto_activate": execute_default,
             "params_file": params_file,
         }.items(),
         condition=IfCondition(use_3d),  # use_3dがTrueのときのみ実行

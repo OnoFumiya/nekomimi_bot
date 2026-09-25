@@ -26,12 +26,12 @@ ssd_ros:
       enable_id: false
 
       # Clipping box parameters (respect to camera frame)
-      x_min: -1.0
-      x_max: 1.0
-      y_min: -1.0
-      y_max: 1.0
-      z_min: 0.0
-      z_max: 1.0
+      x_min: -2.0
+      x_max: 2.0
+      y_min: -2.0
+      y_max: 2.0
+      z_min: -2.0
+      z_max: 2.0
 
       # Point Cloud Processing
       cluster_tolerance: 0.01
