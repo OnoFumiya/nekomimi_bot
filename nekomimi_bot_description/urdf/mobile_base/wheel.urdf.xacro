@@ -9,7 +9,7 @@
       <parent link="${parent}" />
       <child link="${prefix}_link" />
       <axis xyz="0.0 1.0 0.0 " />
-      <limit effort="10.0" velocity="7.913672" />
+      <limit effort="10.0" velocity="15.913672" />
     </joint>
 
     <link name="${prefix}_link">
