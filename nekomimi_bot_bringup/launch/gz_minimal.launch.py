@@ -5,7 +5,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch_ros.actions import Node
 
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution
 
@@ -22,7 +22,20 @@ def generate_launch_description():
     # world_file = os.path.join(get_package_share_directory('gazebo_worlds'), 'worlds', 'robot_cafe_arena.world.xacro')
     world_file = os.path.join(get_package_share_directory('nekomimi_bot_description'), 'worlds', 'empty.sdf')
 
+    new_resource_path = str(os.path.join(get_package_share_directory('nekomimi_bot_description'), ".."))
+    current_gz_resource_path = str(os.environ.get('GZ_SIM_RESOURCE_PATH', ''))
+    if (current_gz_resource_path != ""):
+        updated_gz_resource_path = current_gz_resource_path + ":" + new_resource_path
+    else:
+        updated_gz_resource_path = new_resource_path
+    env_gz_path_arg = SetEnvironmentVariable(
+        name='GZ_SIM_RESOURCE_PATH',
+        value=updated_gz_resource_path
+    )
+
     return LaunchDescription([
+        env_gz_path_arg,
+
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([
                 PathJoinSubstitution([

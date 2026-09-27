@@ -24,7 +24,6 @@ void NekomimiBotWheelControl::update_wheel_goals() {
     }
 
     if (fabsf(goal_base_rad) > ((BODY_ROLL_RANGE < M_PI) ? M_PI/2. : BODY_ROLL_RANGE/2.)) {
-    // if (fabsf(goal_base_rad) >= BODY_ROLL_RANGE/2.+0.01) {
       goal_base_rad -= M_PI * goal_base_rad / fabsf(goal_base_rad);
       pn *= -1;
     }
