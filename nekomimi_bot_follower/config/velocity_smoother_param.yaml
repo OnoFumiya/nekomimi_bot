@@ -1,0 +1,29 @@
+# Configuration example
+# Speed limit is about 10% above the physical limit
+# Acceleration limit is low enough to avoid sway
+
+/**:
+  ros__parameters:
+    use_velocity_smoother: true
+    namespace: person_follower
+    raw_cmd_vel_topic: person_follower/velocity_smoother/raw_cmd_vel
+    output_cmd_vel_topic: /nekomimi_bot/cmd_vel
+    odom_topic: /nekomimi_bot/odom
+    velocity_timeout: 2.5
+
+    # Mandatory parameters
+    speed_lim_v: 0.2
+    speed_lim_w: 90.0
+
+    accel_lim_v: 1.0 # raised so the follower can reach cruise speed faster without being abrupt
+    accel_lim_w: 54.0
+
+    # Optional parameters
+    frequency: 10.0       # Frequency of the output velocity. Regardless of the frequency of the input data, the velocity smoother maintains this frequency and releases the data
+    decel_factor: 5.0    # Deceleration/acceleration ratio (can be increased for large moments of inertia)
+
+    # Robot velocity feedback type:
+    #  0 - none
+    #  1 - odometry
+    #  2 - end robot commands
+    robot_feedback: 2

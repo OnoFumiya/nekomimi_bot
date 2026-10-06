@@ -2,10 +2,10 @@
 /**:
   ros__parameters:
     command_velocity_topic_name : /nekomimi_bot/cmd_vel
-    following_position_topic_name : /sobits_follower/multiple_sensor_person_tracking/following_position
-    obstacles_topic_name : /sobits_follower/multiple_sensor_person_tracking/obstacles
+    following_position_topic_name : /person_follower/multiple_sensor_person_tracking/following_position
+    obstacles_topic_name : /person_follower/multiple_sensor_person_tracking/obstacles
     odom_topic_name : /nekomimi_bot/odom
-    following_stale_timeout_sec : 2.0
+    following_stale_timeout_sec : 2.5
 
     base_footprint_name : nekomimi_bot/base_footprint
     odom_frame_name : nekomimi_bot/odom
@@ -25,37 +25,37 @@
     moment_inertia : 15.0           # I [Kg・m^2]
     viscous_friction_linear : 1.00  # k_3 [N・s/m]
     viscous_friction_angular : 1.00 # k_4 [N・s/rad]
-    radius_robot : 0.4              # L [m]
+    radius_robot : 0.12             # L [m]
     display_vsm_target : false
 
     # Dynamic Window Approach :Velocity Limit
     min_linear : 0.02
-    max_linear : 0.10
-    min_angular_deg : -20.0
-    max_angular_deg : 20.0
+    max_linear : 0.30
+    min_angular_deg : -35.0
+    max_angular_deg : 35.0
 
     # Dynamic Window Approach : Step Value
-    predict_step : 20
+    predict_step : 5
     sampling_time : 0.1             # Predicted time[s] = predict_step[step] * sampling_time[s]
-    velocity_step : 7.0
-    angle_velocity_step : 30.0
+    velocity_step : 12.0
+    angle_velocity_step : 45.0
 
     # Dynamic Window Approach : Weight
-    weight_heading : 3.2
-    weight_obstacle : 1.4
-    weight_velocity : 1.2
+    weight_heading : 3.0
+    weight_obstacle : 0.3
+    weight_velocity : 1.5
 
     # Dynamic Window Approach : VSM-DWA Weight
     weight_vsm_heading : 3.0
-    weight_vsm_obstacle : 1.7
+    weight_vsm_obstacle : 2.0
     weight_vsm_linear : 2.0
     weight_vsm_angular : 0.5
 
     # Dynamic Window Approach : Cost Distance
-    obstacle_cost_radius : 0.45
+    obstacle_cost_radius : 0.2
 
     # PID Controller
     p_gain : 0.6
     i_gain : 0.4
     d_gain : 0.0
-    max_pid_angular_deg : 36.0
+    max_pid_angular_deg : 20.0

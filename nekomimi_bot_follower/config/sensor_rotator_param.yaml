@@ -1,15 +1,15 @@
 /**:
   ros__parameters:
     use_rotate : true
-    following_position_topic_name : /sobits_follower/multiple_sensor_person_tracking/following_position
-    pan_angle_min_deg : -20.0
-    pan_angle_max_deg : 90.0
-    tilt_angle_min_deg : -45.0
+    following_position_topic_name : /person_follower/multiple_sensor_person_tracking/following_position
+    pan_angle_min_deg : -30.0
+    pan_angle_max_deg : 70.0
+    tilt_angle_min_deg : -40.0
     tilt_angle_max_deg : 90.0
     head_rotation_type: "rpy" # "pan_tilt" # "rpy"
     camera2person_height : 1.0
     use_smoothing : true
-    smoothing_gain : 0.3
+    smoothing_gain : 0.8
     pan_command_deadband_deg : 0.8
     tilt_command_deadband_deg : 0.8
     pan_max_speed_deg_s : 120.0
