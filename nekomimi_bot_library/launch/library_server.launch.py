@@ -94,6 +94,19 @@ def generate_launch_description():
         }.items(),
     )
 
+    gui_node = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('nekomimi_bot_library'),
+                'launch',
+                'gui_library.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'web_gui_namespace': LaunchConfiguration('robot_name'),
+        }.items(),
+    )
+
     return LaunchDescription([
         arg_robot_name,
         arg_enable_gz,
@@ -103,4 +116,5 @@ def generate_launch_description():
         stt_node,
         blockly_node,
         teleop_node,
+        gui_node,
     ])

@@ -16,6 +16,7 @@ ros_packages=(
     "stt_ros"
     "blockly_ros2"
     "ros2_web_teleop"
+    "ros2_web_gui_portal"
     "2d_lidar_person_detection"
     "gazebo_worlds"
 )

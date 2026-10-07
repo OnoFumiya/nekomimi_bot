@@ -5,7 +5,6 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /PointCloud21
         - /PointCloud21/Topic1
       Splitter Ratio: 0.5222482681274414
     Tree Height: 292
@@ -28,7 +27,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: 2D LiDAR
+    SyncSource: ""
 Visualization Manager:
   Class: ""
   Displays:
@@ -254,7 +253,7 @@ Visualization Manager:
         History Policy: Keep Last
         Reliability Policy: Reliable
         Transport Override: ""
-        Value: /nekomimi_bot/blockly_url_qrcode
+        Value: /nekomimi_bot/portal_url_qrcode
       Value: true
   Enabled: true
   Global Options:
@@ -343,4 +342,4 @@ Window Geometry:
     collapsed: true
   Width: 730
   X: 70
-  Y: 27
+  Y: 32

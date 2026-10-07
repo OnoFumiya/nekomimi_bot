@@ -1,0 +1,6 @@
+guis:
+  - gui_display_label: "Teleoperation Joystick"
+    url_topic_name: "web_teleop_url_link"
+
+  - gui_display_label: "Blockly Robot Control"
+    url_topic_name: "blockly_url_link"
