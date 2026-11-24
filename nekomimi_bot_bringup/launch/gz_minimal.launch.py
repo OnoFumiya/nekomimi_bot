@@ -95,6 +95,9 @@ def generate_launch_description():
             namespace=robot_name,
             name='rviz2',
             arguments=['-d', rviz_config],
+            parameters=[
+                {"use_sim_time": True},
+            ],
             output='screen',
         ),
     ])
